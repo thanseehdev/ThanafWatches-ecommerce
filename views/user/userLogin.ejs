@@ -1,0 +1,192 @@
+<%-include("../layout/userHeader.ejs")-%> 
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<%-include("../layout/userCentre.ejs")-%>
+    <style>
+       body {
+    background-color: black;
+    background-repeat: no-repeat; /* Ensure the image doesn't repeat */
+    background-size: cover; /* Cover the entire area */
+    background-position: center; /* Center the image */
+}
+
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .login-box {
+            max-width: 800px;
+            width: 100%;
+            background: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+        }
+        .login-image {
+            flex: 1;
+            background-image: url("https://www.rado.com/media/sgecom_contentsystem/homepage/homepage-master-of-materials-image-card.jpg?im=Resize=(800,657),aspect=fill;Crop=(0,0,800,657),gravity=Center"); /* Replace with your image URL */
+            background-size: cover;
+            background-position: center;
+        }
+        .login-form {
+            flex: 1;
+            padding: 50px;
+        }
+        .login-form h2 {
+            margin-bottom: 30px;
+        }
+        .form-control {
+            margin-bottom: 20px;
+        }
+        .btn-primary {
+            background-color: #f0ad4e;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #ec971f;
+        }
+        .custom-control-label::before {
+            background-color: #f0ad4e;
+        }
+    </style>
+
+  <% if (successMessage || errorMessage) { %>
+    <div class="position-fixed top-0 start-50 translate-middle-x" style="z-index: 1000; width: 300px;">
+        <div class="alert alert-dismissible fade show <% if (successMessage) { %>alert-success<% } else { %>alert-danger<% } %>" role="alert">
+            <%= successMessage || errorMessage %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+    <script>
+        // Hide the message after 5 seconds
+        setTimeout(function() {
+            document.querySelector('.alert')?.remove();
+        }, 5000);
+    </script>
+<% } %>
+    <div class="login-container">
+        <div class="login-box">
+            <div class="login-image" ></div>
+            <div class="login-form">
+                <h2>Login</h2>
+                <form action="/login" method="post"  onsubmit="validateForm()">
+                    <div class="form-group">
+                        <label for="email">email</label>
+                        <input type="email" class="form-control" name="email" id="email" placeholder="enter your email" oninput="validateEmail()">
+                        <p id="email-error" class="error-message" style="color: red; margin-bottom: 10px;font-size: small;"></p>
+                                  <% if (email_err) { %>
+                                      <span style="color: red;"><%= email_err %></span>
+                                  <% } %>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Password" oninput="validatePassword()">
+                        <p id="password-error" class="error-message" style="color: red; margin-bottom: 10px;font-size: smaller;"></p>
+                                  <% if (pass_err) { %>
+                                      <span style="color: red;"><%= pass_err %></span>
+                                  <% } %>
+                    </div>
+                    <div class="form-group form-check">
+                        <input type="checkbox" class="form-check-input" id="rememberMe">
+                        <label class="form-check-label" for="rememberMe">Remember Me</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+                    <a href="/auth/google" class="btn  btn-block" style="border: 1px solid rgb(214, 206, 206);"><img src="/assets/google.png" style="width:25px;height: 25px;"></a>
+                    
+                    <div class="text-right mt-2">
+                        <a href="#">Forgot Password?</a>
+                    </div>
+                    <div class="text-center mt-3">
+                        <p>Not a member? <a href="/signup">Sign Up</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    
+function showPopup() {
+    document.getElementById('popup').style.display = 'block';
+
+    // Set a timeout to hide the popup after 3000 milliseconds (3 seconds)
+    setTimeout(function () {
+        document.getElementById('popup').style.display = 'none';
+    }, 3000);
+}
+
+
+    function validateEmail() {
+  var emailInput = document.getElementById('email');
+  var emailError = document.getElementById('email-error');
+  var emailValue = emailInput.value;
+
+  // Check for spaces
+  if (/\s/.test(emailValue)) {
+    emailError.textContent = 'Email cannot contain spaces';
+    emailInput.setCustomValidity('');
+  } else {
+    emailError.textContent = '';
+    // Common email validation
+    var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(emailValue)) {
+      emailError.textContent = 'Invalid email format';
+      emailInput.setCustomValidity('');
+    } else {
+      emailError.textContent = '';
+      emailInput.setCustomValidity('');
+    }
+  }
+  updateCreateButtonState();
+}
+
+function validatePassword() {
+  var passwordInput = document.getElementById('password');
+  var passwordError = document.getElementById('password-error');
+  var passwordValue = passwordInput.value;
+
+  // Password criteria: At least 8 characters, one uppercase letter, one lowercase letter, and one digit
+  var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+
+  if (!passwordRegex.test(passwordValue)) {
+    passwordError.textContent = 'Password must be at least 8 characters and include one uppercase letter, one lowercase letter, and one digit';
+    passwordInput.setCustomValidity('');
+  } else {
+    passwordError.textContent = '';
+    passwordInput.setCustomValidity('');
+  }
+
+  updateCreateButtonState();
+}
+
+function updateCreateButtonState() {
+  
+  var emailError = document.getElementById('email-error').textContent;
+  var passwordError = document.getElementById('password-error').textContent;
+  
+  // Disable the button if there are any errors
+  // createButton.disabled =  emailError || passwordError;
+  document.getElementById('buttonL').disabled = emailError || passwordError;
+}
+
+function validateForm() {
+  
+  validateEmail();
+  validatePassword();
+  
+
+  // Additional form validation logic can be added here
+
+  // Return true if the form is valid, false otherwise
+  return document.querySelector('.error-message').textContent === '';
+}
+
+
+
+</script>
+
+    
+<%-include("../layout/userFooter.ejs")-%> 

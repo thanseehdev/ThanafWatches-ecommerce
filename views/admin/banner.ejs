@@ -1,0 +1,128 @@
+<%-include("../layout/adminHeader.ejs")-%>
+<%-include("../layout/adminCentre.ejs")-%>
+<%-include("../partials/adminNavbar.ejs")-%>
+
+<div class="container mt-5" style="padding-top: 40px;">
+    <form action="/admin/addBanner" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
+        <div class="form-group">
+            <label for="bannerTitle">Banner Title:</label>
+            <input type="text" class="form-control" id="bannerTitle" name="title" required>
+        </div>
+        <br>
+        <div class="form-group">
+            <label for="bannerImage">Banner Image:</label>
+            <input type="file" class="form-control-file" id="bannerImage" name="image" required onchange="previewImage(this)">
+            <br>
+            <img id="imagePreview" src="#" alt="Image Preview" style="max-width: 100%; display: none;">
+        </div>
+        <br>
+        <button type="submit" class="btn btn-primary">Add New Banner</button>
+    </form>
+
+    <hr>
+
+    <div class="row">
+        <% banners.forEach(function(banner) { %>
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card">
+                    <img src="/productimages/<%=banner.image %>" class="card-img-top"
+                        alt="Banner Image" style="height: 250px;">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <%= banner.title %>
+                        </h5>
+                        <button class="btn btn-danger"
+                            onclick="deleteBanner('<%= banner._id%>')">Delete</button>
+                    </div>
+                </div>
+            </div>
+        <% }); %>
+    </div>
+    <hr>
+</div>
+
+<div class="pagination">
+    <% if (currentPage > 1) { %>
+        <a href="?page=<%= currentPage - 1 %>">Previous</a>
+    <% } %>
+
+    <% for (let i = 1; i <= totalPages; i++) { %>
+        <a href="?page=<%= i %>" class="<%= currentPage === i ? 'active' : '' %>"><%= i %></a>
+    <% } %>
+
+    <% if (currentPage < totalPages) { %>
+        <a href="?page=<%= currentPage + 1 %>">Next</a>
+    <% } %>
+</div>
+
+<style>
+    .pagination {
+        display: flex;
+        justify-content: center;
+        margin: 20px 0;
+    }
+
+    .pagination a {
+        margin: 0 5px;
+        text-decoration: none;
+        color: white;
+        background-color: #007bff; /* Primary button color */
+        padding: 10px 15px;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+    }
+
+    .pagination a:hover {
+        background-color: #0056b3; /* Darker shade for hover effect */
+    }
+
+    .pagination a.active {
+        font-weight: bold;
+        background-color: #28a745; /* Active button color */
+        text-decoration: none;
+    }
+</style>
+
+<script>
+    function validateForm() {
+        var titleInput = document.getElementById('bannerTitle');
+        var fileInput = document.getElementById('bannerImage');
+        var titleValue = titleInput.value.trim();
+        var filePath = fileInput.value;
+
+        // Check if the banner title is empty or contains only whitespace
+        if (titleValue === '') {
+            alert('Please enter a banner title.');
+            return false;
+        }
+
+        // Check if the file type is an image
+        var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+        if (!allowedExtensions.exec(filePath)) {
+            alert('Please upload a file with extensions .jpeg/.jpg/.png/.gif only.');
+            fileInput.value = '';
+            return false;
+        } else {
+            // Show image preview if it's an image
+            previewImage(fileInput);
+        }
+
+        return true; // If both validations pass
+    }
+
+    function previewImage(input) {
+        var file = input.files[0];
+        var imagePreview = document.getElementById('imagePreview');
+        if (file) {
+            var reader = new FileReader();
+            reader.onload = function () {
+                imagePreview.src = reader.result;
+                imagePreview.style.display = 'block';
+            }
+            reader.readAsDataURL(file);
+        }
+    }
+</script>
+
+
+<%-include("../layout/adminFooter.ejs")-%>

@@ -1,0 +1,213 @@
+<%-include("../layout/userHeader.ejs")-%>
+<%-include("../layout/userCentre.ejs")-%>
+<%-include("../partials/userNavbar.ejs")-%>
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f8f9fa;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+    .thumbnail img {
+        width: 90px;
+        height: 90px;
+        object-fit: cover;
+        border-radius: 5px;
+    }
+
+    .media-body {
+        padding-left: 15px;
+    }
+
+    .quantity-input {
+        width: 50px;
+        text-align: center;
+        padding: 0;
+    }
+
+    #total-price,
+    #totalDiscount,
+    #grand-total {
+        font-weight: bold;
+    }
+
+    .container {
+        flex: 1;
+        padding-bottom: 100px;
+    }
+
+    footer {
+        background-color: #343a40;
+        color: white;
+        text-align: center;
+        padding: 10px 0;
+        position: relative;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+    }
+</style>
+</head>
+
+<body>
+    <div class="container-fluid mt-5 mb-5">
+        <!-- <div class="container mt-5"> -->
+<div class="container mt-3 mb-5">
+    <div class="row">
+        <div class="col-lg-9 mt-4">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th class="text-center">Price</th>
+                            <th class="text-center">Total</th>
+                            <th> </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% carts.forEach((ele) => { %>
+                            <% if (ele.productid) { %>
+                                <tr>
+                                    <td class="col-md-6">
+                                        <div class="media d-flex">
+                                            <a class="thumbnail pull-left" href="/uniqueproduct/<%- ele.productid._id %>">
+                                                <img class="media-object" src="/productimages/<%= ele.productid.images[0] %>" alt="Product Image">
+                                            </a>
+                                            <div class="media-body ps-3">
+                                                <h5 class="media-heading mt-2">
+                                                    <a href="#" class="text-decoration-none text-dark">
+                                                        <%= ele.productid.productName.toUpperCase() %>
+                                                    </a>
+                                                </h5>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="col-md-2">
+                                        <div class="d-flex justify-content-center">
+                                            <button class="btn btn-sm btn-secondary" id="btnDec" onclick="updateQuantity(-1,'<%= ele.productid._id %>','<%= ele.quantity %>','<%= ele._id %>','<%= ele.productid.price-ele.productid.discountAmount %>','<%= ele.productid.price %>','<%= ele.productid.discountAmount %>','<%= ele.productid.stockQuantity %>')">-</button>
+                                            <input type="text" class="form-control quantity-input mx-2" id="quantity<%= ele.productid._id %>" value="<%= ele.quantity %>" min="1" max="5">
+                                            <button class="btn btn-sm btn-secondary" id="btnIn" onclick="updateQuantity(1,'<%= ele.productid._id %>','<%= ele.quantity %>','<%= ele._id %>','<%= ele.productid.price-ele.productid.discountAmount %>','<%= ele.productid.price %>','<%= ele.productid.discountAmount %>','<%= ele.productid.stockQuantity %>')">+</button>
+                                        </div>
+                                    </td>
+                                    <td class="col-md-2 text-center"><strong><i class="bi bi-currency-rupee"></i><%= ele.productid.price-ele.productid.discountAmount %></strong></td>
+                                    <td class="col-md-2 text-center"><strong id="total<%= ele.productid._id %>"><i class="bi bi-currency-rupee"></i><%= (ele.productid.price-ele.productid.discountAmount)*ele.quantity %></strong></td>
+                                    <td class="col-md-2">
+                                        <button type="button" class="btn btn-danger" onclick="removeFromCart('<%= ele.productid._id %>')">
+                                            <i class="bi bi-x-circle-fill pe-1"></i> Remove
+                                        </button>
+                                    </td>
+                                </tr>
+                            <% } %>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-lg-3 mt-4">
+            <div class="card shadow-0 border">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <p class="mb-2">subTotal price:</p>
+                        <p id="total-price" class="mb-2">₹ <%= grandtotal %></p>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <p class="mb-2">Discount:</p>
+                        <p id="totalDiscount" class="mb-2 text-success">₹ <%= disctotal %></p>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <p class="mb-2">Delivery charges:</p>
+                        <span class="text-success">Free</span>
+                        <del class="text-muted text-nowrap">₹ 40</del>
+                    </div>
+                    <hr />
+                    <div class="d-flex justify-content-between">
+                        <p class="mb-2">Total price:</p>
+                        <p id="grand-total" class="mb-2 fw-bold">₹ <%= totalprice %></p>
+                    </div>
+                    <div class="mt-3">
+                        <a href="/placeorder" class="btn btn-success w-100 shadow-0 mb-2">Place Order</a>
+                        <a href="/allproduct" class="btn btn-light w-100 border mt-2">Back to shop</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<script>
+    function updateQuantity(change, productId, currentQuantity, id,price,grandtoatal,discount,stock) {
+        var input = document.getElementById('quantity' + productId);
+        var total = document.getElementById('total'+ productId)
+        var btnIn = document.getElementById('btnIn')
+        var discountAmount = document.getElementById('totalDiscount')
+        var grandprice=document.getElementById('total-price')
+        var btnDec = document.getElementById('btnDec')
+        var totalAmount = document.getElementById('grand-total')
+        var newValue = parseInt(input.value) + change;
+
+        // Check if newValue is within the min and max range
+        if (newValue >= parseInt(input.min) && newValue <= parseInt(input.max)) {
+            // Make an AJAX request to update the quantity
+            input.value = newValue
+            if (input.value >= 5) {
+                btnIn.disabled = true;
+            }else {
+                btnIn.disabled = false;
+            }
+
+            if (input.value <= 1) {
+                btnDec.disabled = true;
+            }else {
+                btnDec.disabled = false;
+            }
+
+            total.innerHTML = newValue*price
+            // Calculate new grand total, discount total, and total amount
+            var newGrandTotal = parseInt(grandprice.innerHTML.replace(/[^\d.-]/g, '')) + (change * grandtoatal);
+            var newDiscountTotal = parseInt(discountAmount.innerHTML.replace(/[^\d.-]/g, '')) + (change * discount);
+            var newTotalAmount = parseInt(totalAmount.innerHTML.replace(/[^\d.-]/g, '')) + (change * price);
+
+            // Update UI with new values
+            grandprice.innerHTML = newGrandTotal;
+            discountAmount.innerHTML = newDiscountTotal;
+            totalAmount.innerHTML = newTotalAmount;
+
+            var xhr = new XMLHttpRequest();
+            var url = `/addtocart/${productId}/${change}`
+            xhr.open("GET", url, true); // Use GET method
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        // If the request is successful, update the input value
+                        input.value = newValue;
+                        // Display success message using Toastify
+                        Toastify({
+                            text: "Quantity updated successfully!",
+                            duration: 1000, // 3 seconds
+                            backgroundColor: "green",
+                            position: "center",
+                        }).showToast();
+                    } else {
+                        // If the request fails, display an error message using Toastify
+                        Toastify({
+                            text: "An error occurred while updating quantity.",
+                            duration: 3000, // 3 seconds
+                            backgroundColor: "red",
+                            position: "center",
+                        }).showToast();
+                    }
+                }
+            };
+            xhr.send();
+        }
+    }
+</script>
+
+<%-include("../partials/userFooter.ejs")-%>
+<%-include("../layout/userFooter.ejs")-%>

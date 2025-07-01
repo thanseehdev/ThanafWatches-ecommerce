@@ -1,0 +1,469 @@
+<%-include("../layout/userHeader.ejs")-%>
+<%-include("../layout/userCentre.ejs")-%>
+<style>
+    .dropdown-item:hover{
+      background-color: yellow;
+    }
+    .dropdown-item{
+      color:white
+    }
+    .nav-item a{
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+    .dropdown-menu dropdown-menu-end a {
+        font-size: 14px;
+        padding: 20x 40px;
+    }
+  
+    .dropdown-divider {
+        background-color:white
+    }
+  
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-color: rgba(0, 0, 0, 0.5); /* Adjust opacity as needed */
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+   
+  </style>
+  
+  <nav class="navbar navbar-expand-lg navbar-dark " style="background-color: #424646;">
+      <div class="container-fluid">
+        <a class="navbar-brand ms-4" href="#">
+          <img src="assets/TFlogo.png"  alt="" width="70" height="55" style="border-radius: 5px;border:2px solid yellow">
+          </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <form class="d-flex ms-auto me-2">
+              <input class="form-control me-0" style="border-radius:2px;width: 550px; border:2px solid rgb(99, 93, 93);font-family:sans-serif;" type="search" placeholder="Search for Products,Brands and More" aria-label="Search">
+              <!-- <button id="BH" class="btn btn-success ms-0" style="border-radius: 2px;border-top-right-radius: 10px;border-bottom-right-radius: 10px; border: none; background-color: yellow;color:black" type="submit">
+                <i class="bi bi-search"></i>
+              </button> -->
+              <button id="BH" class="btn btn-success ms-0" style="border-radius: 2px; border-top-right-radius: 10px; border-bottom-right-radius: 10px; border: none; background-color: black; color: white;" type="submit" >
+                <i class="bi bi-search"></i>
+            </button>
+            
+              
+          </form> 
+            <ul class="navbar-nav ms-auto me-5 mb-2 mb-lg-0">
+              
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/login">HOME</a>
+              </li>
+              &nbsp;
+        &nbsp;
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/login">ALL</a>
+              </li>
+              &nbsp;
+        &nbsp;
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/login"><i class="bi bi-bag-heart-fill"></i>&nbsp;</a>
+            </li>
+            &nbsp;
+        &nbsp;
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/login"><i class="bi bi-cart4" style="color: #ffffff; cursor: pointer;font-size: 20px;"></i>&nbsp;</a>
+            </li>
+            &nbsp;
+        &nbsp;
+            <li class="nav-item dropdown " >
+              <a class="nav-link dropdown-toggle" href="/login" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" ></i> 
+                <i class="bi bi-person-check" style="color:white"></i>
+              <ul class="dropdown-menu dropdown-menu-end"  aria-labelledby="navbarDropdown" style="background-color:#424646">
+                <li class="d-flex" style="color: yellow;">&nbsp;&nbsp;&nbsp;Hi, </li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="/profile">My profile</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="/allproduct">ALL PRODUCTS</a></li>
+                <li><a class="dropdown-item" href="#">ORDERS</a></li>
+                <li><a class="dropdown-item" href="#">WHISHLIST</a></li>
+                <li><a class="dropdown-item" href="#">COUPONS</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="#" onclick="confirmLogout()">Logout</a></li>
+              </ul>
+            </li>
+    
+          </ul>
+              
+          </div>
+        </div>
+      </nav>
+
+      <style>
+        .dropdown-item:hover{
+          background-color: yellow;
+        }
+        .dropdown-item{
+          color:white
+        }
+        .nav-item a{
+          font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        .dropdown-menu dropdown-menu-end a {
+            font-size: 14px;
+            padding: 20x 40px;
+        }
+      
+        .dropdown-divider {
+            background-color:white
+        }
+       
+      </style>
+      
+      <style>
+        video::-webkit-media-controls {
+          display: none !important;
+        }
+        video::-moz-media-controls {
+          display: none !important;
+        }
+        video::-ms-media-controls {
+          display: none !important;
+        }
+        video::media-controls {
+          display: none !important;
+        }
+      </style>
+      
+      <style>
+        
+          #shopnow:hover{
+            background-color: grey !important;
+          }
+      </style>
+      <style>
+        #inside .card {
+          position: relative; /* Make the card container relative */
+        }
+      
+        #heartI {
+          position: absolute; /* Position the heart icon absolutely within its container */
+          top: 10px; /* Adjust the top position as needed */
+          right: 10px; /* Adjust the right position as needed */
+          border-radius: 2px;
+          border: 1px solid rgb(238, 232, 232);
+          height: 30px;
+          border: none;
+          width: 30px;
+          text-align: center;
+          display: flex;
+          align-items: center;
+          margin-right: 0px;
+          margin-top: -10px;
+          justify-content: center;
+          font-size: medium;
+          font-weight: bolder;
+          background-color: rgb(241, 127, 146);
+          color: white;
+          transition: all 0.3s ease; /* Add a smooth transition for better user experience */
+        }
+      
+        #heartF {
+          position: absolute; /* Position the heart icon absolutely within its container */
+          top: 10px; /* Adjust the top position as needed */
+          right: 10px; /* Adjust the right position as needed */
+          border-radius: 2px;
+          border: 1px solid rgb(238, 232, 232);
+          height: 30px;
+          border: none;
+          width: 30px;
+          text-align: center;
+          display: flex;
+          align-items: center;
+          margin-right: 0px;
+          margin-top: -10px;
+          justify-content: center;
+          font-size: medium;
+          font-weight: bolder;
+          background-color: grey;
+          color: white;
+          transition: all 0.3s ease; /* Add a smooth transition for better user experience */
+        }
+        #heartF:hover {
+          background-color: lightblue; /* Change background color on hover */
+        }
+      
+        @media (max-width: 576px) { /* Adjust the heart icon size for smaller screens */
+          #heartI {
+            height: 20px;
+            width: 20px;
+            top: 5px; /* Adjust the top position for smaller screens */
+            right: 5px; /* Adjust the right position for smaller screens */
+          }
+        }
+      </style>
+      
+      <style>
+        /* Animation for proview div */
+        #proview {
+          opacity: 0; /* Initially hide the div */
+          animation: fadeIn 0.5s ease forwards;
+        }
+      
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+      h1{
+        font-family: sans-serif;
+      }
+      h6{
+  font-family: cursive;
+  letter-spacing: 0.1em;
+  line-height: 2
+  
+}
+        
+      </style>
+      
+      <div class="container-fluid">
+        
+        <div class="container-fluid mt-4 ">
+          <div id="imageCarousel" class="carousel slide" data-ride="carousel" data-interval="3500" style="overflow: hidden;">
+      
+            <div class="carousel-inner">
+              <!-- Slide 1 -->
+              <div class="carousel-item active">
+             
+                <img src= "/productimages/banner5.png" class="d-block w-100" alt="Image 4" style="border-radius:7px;" >
+              </div>
+              <!-- Slide 2 -->
+              
+              <div class="carousel-item">
+                <img src= "/productimages/banner4.png-%>" class="d-block w-100" alt="Image 4" style="border-radius:7px;" >
+              </div>
+    
+              <div class="carousel-item">
+                <img src= "/productimages/banner1.png-%>" class="d-block w-100" alt="Image 4" style="border-radius:7px;" >
+              </div>
+    
+              <div class="carousel-item">
+                <img src= "/productimages/banner2.png-%>" class="d-block w-100" alt="Image 4" style="border-radius:7px;" >
+              </div>
+              
+              <!-- Slide 3 -->
+              
+            </div>
+            <!-- Carousel Controls -->
+            <a class="carousel-control-prev" href="#imageCarousel" role="button" data-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="sr-only"></span>
+            </a>
+            <a class="carousel-control-next" href="#imageCarousel" role="button" data-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="sr-only"></span>
+            </a>
+          </div>
+        </div>
+      
+          <div class="col-lg-12">
+              <header class="d-sm-flex align-items-center border-bottom mb-4 pb-3">
+                <div class="ms-auto">
+               
+                  <!-- <div class="btn-group shadow-0 border">
+                    <a href="#" class="btn btn-light" title="List view">
+                      <i class="bi bi-layout-text-sidebar-reverse fa-lg"></i>
+                    </a>
+                    <a href="#" class="btn btn-light active" title="Grid view">
+                      <i class="bi bi-flower2 fa-lg"></i>
+                    </a>
+                  </div>     -->
+                </div>
+              </header>
+           
+      
+      
+              <div class="container">
+                <div class="row">
+                  <div class="col-12 col-md-6">
+                    <div class="p-3 " style="height: 450px;display: flex;justify-content: center;align-items: center;flex-direction: column; "><h1>Modern alchemy</h1><br><br><h6>Special treatment for a special substance... High-tech ceramic goes through a number of transformative treatments, to take it from organic powder to complex product with unique visual and tactile properties. Qualities such as colour, shade or brilliance can be further fine-tuned, thanks to Rado's own, unique plasma high-tech ceramic process.</h6></div>
+                  </div>
+                  <div class="col-12 col-md-6">
+                    <video width="100%" height="100%" autoplay muted loop>
+                      <source src="https://www.rado.com/media/sgecom_contentsystem/PDP_Images/TrueSquare_x_KunihikoMorinaga_R27086172_pckshot.mp4" type="video/mp4">
+                      Your browser does not support the video tag.
+                    </video>
+                  </div>
+                </div>
+              </div>
+              
+      <br>
+      <br>
+      <div class="container">
+        <div class="row">
+          <div class="col-12 col-md-6">
+            <img src="https://www.rado.com/media/sgecom_contentsystem/Warranty-Extension/warranty-extension-homepage-block.jpg?im=Resize=(800,657),aspect=fill;Crop=(0,0,800,657),gravity=Center" alt="" class="img-fluid" style="max-height: 450px;">
+          </div>
+          <div class="col-12 col-md-6">
+            <div class="p-3" style="height: 450px;display: flex;justify-content: center;flex-direction: column; ">
+              <h1>Ongoing discoveries from the Master of Materials</h1>
+              <br>
+              <br>
+              <h6>The passion for research and development at Rado has brought the world a number of new substances, many of which are now used in the production of their uniquely recognizable and exquisite watches.</h6>
+              <br>
+              <button class="btn btn" style="background-color: black;color: silver;width: 150px;">Disover More</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      
+      
+            
+      <div class="container mt-5 mb-5">
+        <div class="row">
+          <div class="col-12">
+            <h2 style="text-align: center; margin-bottom: 30px; position: relative;">
+              <span style="background-color: #fff; padding: 0 10px;font-family: cursive;">
+                Our Favorite Timepieces
+              </span>
+              <span style="position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%); display: block; width: 80%; height: 1px; background-color: rgb(217, 213, 213);"></span>
+            </h2>
+          </div>
+          
+          <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card"  style="border-bottom: none;border-left: none;border-right: none;">
+              <a href="/allproduct">
+              <img src="/productimages/1716024907708p5-1.png" class="card-img-top" alt="...">
+              </a>
+              <div class="card-body">
+                <h5 class="card-title">PATEK PHILIPPE</h5>
+                <!-- Other content like product description, price, etc. can go here -->
+              </div>
+            </div>
+          </div>
+    
+          <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card"  style="border-bottom: none;border-left: none;border-right: none;">
+              <a href="/allproduct">
+              <img src="/productimages/1716024907719p2-1.png" class="card-img-top" alt="...">
+              </a>
+              <div class="card-body">
+                <h5 class="card-title">TITAN</h5>
+                <!-- Other content like product description, price, etc. can go here -->
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card"  style="border-bottom: none;border-left: none;border-right: none;">
+              <a href="/allproduct">
+              <img src="/productimages/1716019381994.png" class="card-img-top" alt="...">
+              </a>
+              <div class="card-body">
+                <h5 class="card-title">ROLEX</h5>
+                <!-- Other content like product description, price, etc. can go here -->
+              </div>
+            </div>
+          </div>
+    
+          <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card"  style="border-bottom: none;border-left: none;border-right: none;">
+              <a href="/allproduct">
+              <img src="/productimages/1715848793568p3-1.png" class="card-img-top" alt="...">
+              </a>
+              <div class="card-body">
+                <h5 class="card-title">RADO</h5>
+                <!-- Other content like product description, price, etc. can go here -->
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+      
+            
+      
+      
+            <div class="container">
+              <div class="row">
+                <div class="col-12 col-md-6">
+                    <img src="https://www.rado.com/media/sgecom_contentsystem/Feel_Rado/Art_of_Ceramic/card-708x520.jpg?im=Resize=(800,657),aspect=fill;Crop=(0,0,800,657),gravity=Center" alt="" class="img-fluid" style="max-height: 450px;">
+                  
+                </div>
+                <div class="col-12 col-md-6">
+                  <div class="p-3" style="height: 450px;display: flex;justify-content: center;align-items: center;flex-direction: column; ">
+                     <h6>Creating something this beautiful, in ceramic, requires a huge amount of know-how and patience. Achieving the exact right colour, creating the precise tactile quality, shaping the final object into that special timepiece that takes one's breath away, is measured in years of applied expertise.</h6>
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+          <br>
+
+          <div class="container mt-3 mb-3">
+            <div class="row">
+              <div class="col-md-4">
+                <div class="position-relative">
+                  <img src="https://www.rado.com/media/sgecom_contentsystem/homepage/captain-cook-chronograph_1.jpg?im=Resize=(2000,1400),aspect=fill;Crop=(0,0,2000,1400),gravity=Center" class="img-fluid" alt="Image 1">
+                  <div class="overlay">
+                    <h5 class="card-title">Chronograph watches</h5>
+                    <a href="#" class="btn btn-primary mt-3" style="background: none !important;border: 1px solid white !important;">Discover more</a>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="position-relative">
+                  <img src="https://www.rado.com/media/sgecom_contentsystem/homepage/skeleton-watches.jpg?im=Resize=(2000,1400),aspect=fill;Crop=(0,0,2000,1400),gravity=Center" class="img-fluid" alt="Image 2">
+                  <div class="overlay">
+                    <h5 class="card-title">Skeleton watches</h5>
+                    <a href="#" class="btn btn-primary mt-3" style="background: none !important;border: 1px solid white !important;">Discover more</a>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="position-relative">
+                  <img src="https://www.rado.com/media/sgecom_contentsystem/homepage/captain-cook-over-pole.jpg?im=Resize=(2000,1400),aspect=fill;Crop=(0,0,2000,1400),gravity=Center" class="img-fluid" alt="Image 3">
+                  <div class="overlay">
+                    <h5 class="card-title">Leather watches</h5>
+                    <a href="#" class="btn btn-primary mt-3" style="background: none !important;border: 1px solid white !important;">Discover more</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="container">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="position-relative">
+                  <img src="https://www.rado.com/media/catalog/category/CollectionList-truesquare-2880x1400.png?im=Resize=(1920,1280),aspect=fill;Crop=(0,0,1920,1280),gravity=Center" class="img-fluid" alt="Image 1">
+                  <div class="overlay">
+                    <h5 class="card-title">Mens watches</h5>
+                    <a href="#" class="btn btn-primary mt-3" style="background: none !important;border: 1px solid white !important;">Explore more</a>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="position-relative">
+                  <img src="https://www.rado.com/media/catalog/category/CollectionList-true-2880x1400.png?im=Resize=(1920,1280),aspect=fill;Crop=(0,0,1920,1280),gravity=Center" class="img-fluid" alt="Image 2">
+                  <div class="overlay">
+                    <h5 class="card-title">Womens watches</h5>
+                    <a href="#" class="btn btn-primary mt-3" style="background: none !important;border: 1px solid white !important;">Explore more</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+      </div>
+      <%-include("../partials/userFooter.ejs")-%>
+      <%-include("../layout/userFooter.ejs")-%>

@@ -1,0 +1,47 @@
+<%-include("../layout/adminHeader.ejs")-%>
+<%-include("../layout/adminCentre.ejs")-%>
+<%-include("../partials/adminNavbar.ejs")-%>
+<div class="container" style="justify-content: center;margin-top: 150px;width: 550px;" >
+    <% if (successMessage) { %>
+        <div class="alert alert-success" role="alert" id="successMessage">
+            <%= successMessage %>
+        </div>
+    
+        <script>
+            setTimeout(function() {
+                document.getElementById('successMessage').style.display = 'none';
+            }, 3000);
+        </script>
+    <% } %>
+    <% if (errorMessage) { %>
+        <div class="alert alert-danger" role="alert" id="successMessage">
+            <%= errorMessage %>
+        </div>
+    
+        <script>
+
+            setTimeout(function() {
+                document.getElementById('successMessage').style.display = 'none';
+            }, 3000);
+        </script>
+    <% } %>
+    <section class="card" style="height: 230px;">
+        <form action="/admin/addbrand" method="post">
+            <div class="card-header bg-dark text-white text-center">
+                <h4>Add Brands</h4>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="categoryName" class="form-label">Enter Brand</label>
+                    <input type="text" class="form-control" id="brandname" name="brandname" required>
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-success">Add Brand</button>
+                </div>
+            </div>
+        </form>
+    </section>
+</div>
+
+
+<%-include("../layout/adminFooter.ejs")-%>

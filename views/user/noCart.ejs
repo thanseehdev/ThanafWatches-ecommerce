@@ -1,0 +1,35 @@
+<%-include("../layout/userHeader.ejs")-%>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<%-include("../layout/userCentre.ejs")-%>
+<%-include("../partials/userNavbar.ejs")-%>
+<style>
+    /* CSS for custom styling */
+    .main-container {
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .cart-img {
+        max-width: 100%;
+        height: auto;
+    }
+</style>
+
+
+<div class="main-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-sm-5">
+                <div class="card" style="border-radius: 20px;border: 2px solid rgb(247, 242, 242);">
+                    <div class="card-body" style="color:brown;font-size: x-large;">
+                        <img src="https://www.tanishq.co.in/on/demandware.static/-/Library-Sites-TanishqSharedLibrary/default/dw39d0b5f4/images/cart/Group14779.svg" class="img-fluid" alt="Empty Cart Image">&nbsp;&nbsp;YOUR CART IS EMPTY
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%-include("../partials/userFooter.ejs")-%>
+<%-include("../layout/userFooter.ejs")-%>

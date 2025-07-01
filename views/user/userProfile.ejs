@@ -1,0 +1,665 @@
+<%-include("../layout/userHeader.ejs")-%>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<%-include("../layout/userCentre.ejs")-%>
+<%-include("../partials/userNavbar.ejs")-%>
+<!-- <style>
+    /* Increase the height of the card container */
+    .card-container {
+        height: 400px; /* Adjust the height as needed */
+    }
+
+    /* Set the list items to have the same height */
+    .list-group-item {
+        height: 60px; /* Adjust the height as needed */
+        line-height: 60px; /* Center the content vertically */
+        display: flex;
+        align-items: center;
+        vertical-align: middle;
+    }
+    #editIcon{
+        color: blue;
+        font-size: 20px;
+    }
+    .hidden-div{
+        display: none;
+    }
+    .badge-dark{
+        background-color: black;
+    }
+    .btn-delete{
+        background-color: rgba(245, 21, 21, 0.904);
+        color: white;
+        border: none;
+        border-radius: 10%;
+    }
+    .btn-edit{
+        background-color:rgb(34, 34, 224);
+        color: white;
+        border: none;
+        border-radius: 10%;
+    }
+</style> -->
+<style>
+ 
+.middle-container{
+	background-color: #eee;
+	border-radius: 12px;
+
+}
+
+.dollar-div{
+	background-color: #5957f9;
+	padding: 12px;
+	border-radius: 10px;
+}
+.round-div{
+	border-radius: 50%;
+	width: 35px;
+	height: 35px;
+	background-color: #fff;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+}
+.dollar{
+	font-size: 16px !important;
+	color: #5957f9 !important;
+	font-weight: bold !important;
+}
+
+
+.current-balance{
+	font-size: 15px;
+	color: #272727;
+	font-weight: bold;
+}
+.amount{
+	color: #5957f9;
+	font-size: 16px;
+	font-weight: bold;
+}
+.dollar-sign{
+	font-size: 16px;
+	color: #272727;
+	font-weight: bold;
+}
+
+.recent-border{
+	border-left: 2px solid #5957f9;
+	display: flex;
+	align-items: center;
+
+}
+.recent-border:hover {
+	border-bottom: 1px solid #dee2e6!important;
+}
+
+.recent-orders{
+	font-size: 16px;
+	font-weight: 700;
+	color: #5957f9;
+	margin-left: 2px;
+}
+
+.wishlist{
+	font-size: 16px;
+	font-weight: 700;
+	color: #272727;
+
+}
+.wishlist-border:hover{
+	border-bottom: 1px solid #dee2e6!important;
+}
+.fashion-studio{
+	font-size: 16px;
+	font-weight: 700;
+	color: #272727;
+}
+.fashion-studio-border:hover {
+	border-bottom: 1px solid #dee2e6!important;
+}
+</style>
+
+<style>
+ 
+
+#card1 {
+  width: 500px;
+  height: 250px ;
+  padding: 10px;
+  border-radius: 20px;
+  background: orange;
+  border: none;
+  color: #fff;
+  display: flex;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+}
+
+
+
+
+
+.imagee {
+  position: absolute;
+  opacity: .1;
+  left: 0;
+  top: 0;
+}
+
+.imagee2 {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  opacity: .1;
+}
+</style>
+<style>
+    /* Add your custom styles here */
+
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f8f9fa;
+    }
+
+    section {
+        min-height: 90vh;
+        margin-top: 100px;
+    }
+
+    .card {
+        border-radius: 15px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+    }
+
+    .list-group-item {
+        cursor: pointer;
+    }
+
+    .tab-content {
+        padding: 20px;
+    }
+
+    .btn-primary,
+    .btn-delete {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .btn-delete {
+        background-color: #dc3545;
+    }
+    #create-button{
+        background-color: green;
+        color:white;
+        border-radius: 3px;
+    }
+
+    /* Customize further based on your preferences */
+</style>
+<section style="min-height: 90vh;margin-top: 100px;">
+
+    <% if (successMessage || errorMessage) { %>
+        <div class="position-fixed top-0 start-50 translate-middle-x" style="z-index: 1000; width: 300px;">
+            <div class="alert alert-dismissible fade show <% if (successMessage) { %>alert-success<% } else { %>alert-danger<% } %>" role="alert">
+                <%= successMessage || errorMessage %>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+        <script>
+            // Hide the message after 5 seconds
+            setTimeout(function() {
+                document.querySelector('.alert')?.remove();
+            }, 5000);
+        </script>
+    <% } %>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12 d-flex justify-content-center align-items-center mb-5 mt-2">
+                <h3>User Profile</h3>
+            </div>
+            <div class="col-md-5 col-xl-4 mb-4" >
+                <div class="card ">
+                    <div class="card-header d-flex justify-content-center align-items-center">
+                        <h5 class="card-title mb-0">Profile Settings</h5>
+                    </div>
+                    <div class="list-group list-group-flush " role="tablist">
+                        <a class="list-group-item list-group-item-action active" onclick="showDivAndSendGet(this,'/profile')" role="tab">
+                            Account
+                        </a>
+                        <a class="list-group-item list-group-item-action" onclick="manageAddresses(this,'div2')"
+                            role="tab">
+                            Password
+                        </a>
+                        <a  data-toggle="list">
+                            <a class="list-group-item list-group-item-action" onclick="manageAddresses(this,'div3')" role="tab">
+                                Address
+                            </a>
+                        </a>
+                        <a class="list-group-item list-group-item-action"  onclick="manageAddresses(this,'div4')"
+                            role="tab">
+                            Coupons
+                        </a>
+                        <a class="list-group-item list-group-item-action"  onclick="manageAddresses(this,'div5')"
+                            role="tab">
+                            Wallet
+                        </a>
+                        <!--<a class="list-group-item list-group-item-action" data-toggle="list" href="#" role="tab">
+                        Widgets
+                    </a>
+                    <a class="list-group-item list-group-item-action" data-toggle="list" href="#" role="tab">
+                        Your data
+                    </a>
+                    <a class="list-group-item list-group-item-action" data-toggle="list" href="#" role="tab">
+                        Delete account
+                    </a> -->
+                    </div>
+                    </div>
+            </div>
+            
+            <div class="col-md-7 col-xl-8" style="margin-top: -50px;">
+                <div class="tab-content" style="height: 350px;">
+                    <div class="tab-pane fade show active" id="account" role="tabpanel" >
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-center align-items-center">
+                            </div>
+
+
+                            <div class="card-body-main ps-2 mb-3" id="div1">
+                                <form id="userForm" action="/resetusername" method="post">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label for="inputUsername" style="font-weight: bold;">Username</label><br><br>
+                                                <div class="row d-flex">
+                                                    <div class="col-md-9 text-right d-flex" >
+                                                        <input type="text" class="form-control" id="inputUsername" name="username" placeholder="Username" value="<%=username%>">
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <i class="bi bi-pencil-square" id="editIcon" style="cursor: pointer;margin-left: 10%;"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="form-group">
+                                                <label for="inputEmail" style="font-weight: bold;">Email</label><br><br>
+                                                <div class="col-md-9 text-right d-flex" >
+                                                    <input type="email" class="form-control" id="inputEmail" name="email" placeholder="Email" value="<%=email%>" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <button type="submit" class="btn btn-primary" style="margin-left: 20%;" id="saveButton">Save changes</button>
+                                </form>
+                            </div>
+
+
+                            <div class="card-body hidden-div" id="div2">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h5 class="card-title">Password</h5>
+                                    <label for="" class="text-center"
+                                        style="color: red;font-size: smaller;"><%-locals.err?err:""-%></label>
+                                    <form action="/changepassword" method="post">
+                                        <!-- Current password -->
+                                        <div class="form-group">
+                                            <label for="inputPasswordCurrent" style="font-weight: 600;">Current password</label>
+                                            <br><br>
+                                            <input type="password" placeholder="Current Password" name="currentpassword"
+                                                class="form-control" id="password1" oninput="validateCurrentPassword()"
+                                                required>
+                                            <p id="current-password-error" class="current-error-message"
+                                                style="color: red; margin-bottom: 10px; font-size: smaller;"></p>
+                                                <!-- <small style="float: right;margin-right: 7%;"><a style="text-decoration: none;color: rgb(247, 18, 18);" href="#">Forgot your password?</a></small> -->
+                                        </div>
+
+                                        <!-- New password -->
+                                        <div class="form-group">
+                                            <label for="inputPasswordNew" style="font-weight: 600;">New password</label>
+                                            <br><br>
+                                            <input id="new-password" type="password" placeholder="New Password" class="form-control"
+                                                name="password" oninput="validatePassword()" required>
+                                            <p id="password-error" class="error-message"
+                                                style="color: red; margin-bottom: 10px; font-size: smaller;"></p>
+                                        </div>
+
+                                        <!-- Confirm password -->
+                                        <div class="form-group">
+                                            <label for="inputPasswordNew2" style="font-weight: 600;">Confirm password</label>
+                                            <br><br>
+                                            <input type="password" placeholder="Confirm Password" class="form-control"
+                                                id="inputPasswordNew2" oninput="validateConfirmPassword()" required>
+                                            <p id="confirmpassword-error" class="error-message"
+                                                style="color: red; margin-bottom: 10px; font-size: smaller;"></p>
+                                        </div>
+                                        <br>
+                                        <button  class="btn btn-primary" type="submit" >Submit</button>
+                                    </form>
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+
+                            <div class="card-body hidden-div" id="div4">
+                                <!-- Add a container for total coupon count -->
+                                <div id="couponCount" class="text-center mb-4"></div>
+                            
+                                <div class="row" style="max-height: 400px; overflow-y: auto; margin-left: 60px; height: 300px;">
+                                    <% if (coupons && coupons.length > 0) { %>
+                                        <% coupons.forEach((item, index) => { %>
+                                            <% if (index % 3 === 0) { %>
+                                                <div class="row mb-4">
+                                            <% } %>
+                                            <div class="col-lg-4 col-md-6 mb-4">
+                                                <div class="d-flex justify-content-center align-items-center container">
+                                                    <div class="d-flex card text-center justify-content-center" id="card1">
+                                                        <div class="imagee"><img src="https://i.imgur.com/DC94rZe.png" width="150"></div>
+                                                        <div class="imagee2"><img src="https://i.imgur.com/DC94rZe.png" width="150"></div>
+                                                        <br>
+                                                        <h2>₹<%= item.discountAmount %> OFF</h2>
+                                                        <div class="mt-6" style="font-size: xx-large;color:grey;"><%= item.couponCode %></div>
+                                                        <span style="font-size: small; margin-top: 5px;">minimum purchase amount: ₹<%= item.minimumPurchaseAmount %></span>
+                                                        <h6 style="margin-top: 5px;font-size: small;">Due Date: <%= item.expiryDate %></h6>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <% if ((index + 1) % 3 === 0) { %>
+                                                </div>
+                                            <% } %>
+                                        <% }) %>
+                                        <% if (coupons.length % 3 !== 0) { %>
+                                            </div>
+                                        <% } %>
+                                    <% } else { %>
+                                        <div>
+                                            <h5>No Coupon In Here</h5>
+                                        </div>
+                                    <% } %>
+                                </div>
+                                
+                            </div>
+                            
+                            <!-- Add a script to count coupons and display the count -->
+                            <script>
+                                // Count the number of coupons
+                                var couponCount = "<%= coupons.length %>";
+                            
+                                // Display the count at the top
+                                document.getElementById('couponCount').innerHTML = "<h3>Total Coupons: " + couponCount + "</h3>";
+                            </script>
+                            
+
+
+
+
+
+                            <div class="card-body hidden-div" id="div5">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="middle-container d-flex justify-content-between align-items-center mt-3 p-2">
+                                            <div class="dollar-div px-3">
+                                                
+                                                <div class="round-div"><i class="bi bi-currency-dollar"></i>
+                                                </div>
+                            
+                                            </div>
+                                            <div class="d-flex flex-column text-right mr-2">
+                                                <span class="current-balance">Current Balance</span>
+                                                <span class="amount"><span class="dollar-sign">₹</span><%= wallet?.walletB || 0 %></span>
+
+                                            </div>          
+                                    </div>
+                                    <hr>
+                                    <div class="d-flex justify-content-center row" style="max-height: 300px; overflow-y: auto;">
+                                        <div class="col-md-10">
+                                            <div class="rounded">
+                                                <div class="table-responsive table-borderless">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th class="text-center">
+                                                                    <div class="toggle-btn">
+                                                                        <div class="inner-circle"></div>
+                                                                    </div>
+                                                                </th>
+                                                                <th>Date</th>
+                                                                <th>Type</th>
+                                                                <th>Reason</th>
+                                                                <th>Total</th>
+                                                                
+                                                                <th></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody class="table-body">
+                                                            <% if(walletHistory && walletHistory.Transaction && walletHistory.Transaction.length > 0) { %>
+                                                                <% walletHistory.Transaction.forEach((data, index) => { %>
+                                                                    <tr class="cell-1">
+                                                                        <td class="text-center">
+                                                                            <div class="toggle-btn">
+                                                                                <div class="inner-circle"></div>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td><%= data.date.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata',
+                                                                            dateStyle: 'short', timeStyle: 'short' }) %></td>
+                                                                        <td><%= data.type %></td>
+                                                                        <td><%= data.reason %></td>
+                                                                        <td>₹<%= data.amount %></td>
+                                                                        
+                                                                    </tr>
+                                                                <% }) %>
+                                                            <% } else { %>
+                                                                <tr>
+                                                                    <td colspan="6">No transactions found.</td>
+                                                                </tr>
+                                                            <% } %>
+                                                        </tbody>
+                                                        
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+
+
+
+
+                            <div class="card-body hidden-div" id="div3">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="address-container">
+                                            <div class="add-address d-flex">
+                                                <div>
+                                                    <h2>Manage Address</h2>
+                                                </div>
+                                                <a class="ms-auto me-0" href="/addaddress">
+                                                    <button class="add-address-btn btn-sm" 
+                                                            style="background-color: rgb(41, 198, 41); color: white; border-radius: 3px;">
+                                                        <i class="fas fa-plus"></i>
+                                                    </button>
+                                                </a>
+                                                
+                                                
+                                            </div>
+
+                                            <% address.forEach(data=> { %>
+
+                                                <ul class="address-list">
+                                                    <!-- Sample address item -->
+            
+                                                    <li class="address-item  p-3 mb-5 mt-3 bg-white rounded" style="border: 1px solid grey;">
+                                                        <button type="button" class="badge badge-dark" style="color:black">
+                                                            <%= data.addressType %>
+                                                        </button><br><br>
+                                                        <p><span style="font-weight: bold;">Name: </span><%-data.name-%></p>
+                                                        <p><span style="font-weight: bold;">Address: </span><%= data.address %>, <%= data.locality %>, <%= data.city %>, <%=
+                                                                            data.district %>, <%= data.state %>
+                                                        </p>
+                                                        <p><span style="font-weight: bold;">Phone: </span><%-data.mobile-%></p>
+                                                        <p><span style="font-weight: bold;">Pin: </span><%-data.pincode-%></p>
+            
+                                                        <a href="/editaddress/<%=data._id%>"><button class="btn-sm btn-edit"><i
+                                                                    class="bi bi-pencil-square"></i> Edit</button></a>
+            
+                                                        <p hidden>id: <%-data.userId-%></p>
+            
+                                                        <button class="btn-sm btn-delete" onclick="confirmDelete('<%- data._id %>')">
+                                                            <i class="bi bi-trash-fill"></i> Delete
+                                                        </button>
+                                                        
+                                                    </li>
+            
+                                                    <!-- Add more address items here -->
+                                                </ul>
+            
+            
+            
+                                                <% }) %>
+            
+            
+                                            
+                                        </div>
+                                    </div>
+
+                                    </div>
+
+                                </div>
+                                
+                            </div>
+                        </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Place this script in the head or before the closing body tag -->
+
+<script>
+    document.getElementById('userForm').addEventListener('submit', function(event) {
+        var username = document.getElementById('inputUsername').value.trim();
+        var email = document.getElementById('inputEmail').value.trim();
+        var usernameRegex = /^[a-zA-Z]+$/;
+        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+        
+        if (!usernameRegex.test(username)) {
+            alert('Username can only contain letters (a-z) and cannot contain spaces.');
+            event.preventDefault();
+        } else if (username === '') {
+            alert('Username cannot be empty.');
+            event.preventDefault();
+        } else if (!emailRegex.test(email)) {
+            alert('Invalid email format or email cannot contain spaces.');
+            event.preventDefault();
+        } else if (email === '') {
+            alert('Email cannot be empty.');
+            event.preventDefault();
+        } else if (!email.endsWith('@gmail.com')) {
+            alert('Email must be a Gmail address.');
+            event.preventDefault();
+        }
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const editIcon = document.getElementById('editIcon');
+        const inputUsername = document.getElementById('inputUsername');
+        const inputEmail = document.getElementById('inputEmail');
+        const saveButton = document.getElementById('saveButton');
+        const usernameRegex = /^[a-zA-Z]+$/; // Allow only alphabets
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.[a-zA-Z]{2,}$/; // Check for @gmail in email
+
+        // Enable edit mode on clicking the edit icon
+        editIcon.addEventListener('click', function () {
+            inputUsername.removeAttribute('disabled');
+            inputEmail.removeAttribute('disabled');
+            saveButton.style.display = 'block';
+        });
+
+        // Validate username and email on form submission
+        document.querySelector('form').addEventListener('submit', function (event) {
+            if (!usernameRegex.test(inputUsername.value)) {
+                alert('Invalid username. Please use only alphabets.');
+                event.preventDefault(); // Prevent form submission
+            }
+
+            if (!emailRegex.test(inputEmail.value)) {
+                alert('Invalid email. Please use a valid @gmail email address.');
+                event.preventDefault(); // Prevent form submission
+            }
+        });
+    });
+</script>
+
+<script>
+    // Get references to the edit icon and the save button
+    var editIcon = document.getElementById('editIcon');
+    var saveButton = document.getElementById('saveButton');
+    var inputEmail = document.getElementById('inputEmail');
+    var inputUser = document.getElementById('inputUsername')
+
+    // Add click event listener to the edit icon
+    editIcon.addEventListener('click', function() {
+
+        inputUser.removeAttribute('disabled');
+        inputEmail.removeAttribute('disabled');
+
+        // Toggle the visibility of the save button
+        saveButton.style.display = (saveButton.style.display === 'none') ? 'inline-block' : 'none';
+    });
+</script>
+<script>
+    function validateCurrentPassword() {
+    var currentPassword = document.getElementById("password1").value;
+    var passwordRegex =  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+    
+    if (currentPassword === "") {
+        document.getElementById("current-password-error").innerText = "Please enter your current password.";
+    } else if (!passwordRegex.test(currentPassword)) {
+        document.getElementById("current-password-error").innerText = 'Password must be at least 8 characters and include one uppercase letter, one lowercase letter, and one digit';
+    } else {
+        document.getElementById("current-password-error").innerText = "";
+    }
+}
+function validatePassword() {
+    var newPassword = document.getElementById("new-password").value;
+    var passwordRegex =  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+    
+    if (newPassword === "") {
+        document.getElementById("password-error").innerText = "Please enter a new password.";
+    } else if (!passwordRegex.test(newPassword)) {
+        document.getElementById("password-error").innerText = 'Password must be at least 8 characters and include one uppercase letter, one lowercase letter, and one digit';
+    } else {
+        document.getElementById("password-error").innerText = "";
+    }
+}
+function validateConfirmPassword() {
+    var confirmPassword = document.getElementById("inputPasswordNew2").value;
+    var newPassword = document.getElementById("new-password").value;
+    var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+    
+    if (confirmPassword !== newPassword) {
+        document.getElementById("confirmpassword-error").innerText = "Passwords do not match.";
+    } else {
+        document.getElementById("confirmpassword-error").innerText = "";
+    } 
+}
+</script>
+
+
+<%-include("../partials/userFooter.ejs")-%>
+<%-include("../layout/userFooter.ejs")-%>

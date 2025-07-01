@@ -1,0 +1,342 @@
+<%-include("../layout/adminHeader.ejs")-%>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+<script
+src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js">
+</script>
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<%-include("../partials/adminNavbar.ejs")-%>
+
+<div class="container-fluid mt-5">
+  <div class="row my-3">
+      <div class="col">
+          <h4>Dashboard</h4>
+          <button id="openModalBtn" class="btn btn-primary float-right"><i class="bi bi-download"></i> Generate Report</button>
+      </div>
+  </div>
+
+  <div class="row">
+      <div class="col-md-3 mb-3">
+          <div class="card" style="border-left: 6px solid rgb(20, 186, 20);">
+              <div class="card-body">
+                  <h6 class="card-title" style="color:rgb(20, 186, 20);">EARNINGS (MONTHLY)</h6>
+                  <a href="#" class="btn" style="border:1px solid grey;color:#5a5c69;font-size: 20px;">₹<%= monthlyEarningss %></a>
+                  <i class="fas fa-calendar" style="color: lightgrey;font-size: 35px;float:right;"></i>
+              </div>
+          </div>
+      </div>
+      <div class="col-md-3 mb-3">
+          <div class="card" style="border-left: 6px solid rgb(36, 36, 216);">
+              <div class="card-body">
+                  <h6 class="card-title" style="color:rgb(36, 36, 216);">EARNINGS (per/DAY)</h6>
+                  <a href="#" class="btn" style="border:1px solid grey;color:#5a5c69;font-size: 20px;">₹<%= todayEarningsTotal %></a>
+                  <i class="fas fa-dollar-sign" style="color: lightgrey;font-size: 35px;float:right;"></i>
+              </div>
+          </div>
+      </div>
+      <div class="col-md-3 mb-3">
+          <div class="card" style="border-left: 6px solid red;">
+              <div class="card-body">
+                  <h6 class="card-title" style="color:red">Total Sales</h6>
+                  <a href="#" class="btn" style="border:1px solid grey;color:#5a5c69;font-size: 20px;">₹<%= totalAmount %></a>
+                  <i class="fas fa-chart-line" style="color: lightgrey;font-size: 35px;float:right;"></i>
+              </div>
+          </div>
+      </div>
+      <div class="col-md-3 mb-3">
+          <div class="card" style="border-left: 6px solid orange;">
+              <div class="card-body">
+                  <h6 class="card-title" style="color:orange">Total Orders</h6>
+                  <a href="#" class="btn" style="border:1px solid grey;color:#5a5c69;font-size: 20px;"><%= OrdersT %></a>
+                  <i class="fas fa-comments" style="color: lightgrey;font-size: 35px;float:right;"></i>
+              </div>
+          </div>
+      </div>
+  </div>
+
+  <div class="row">
+      <div class="col-md-8 mb-3">
+          <div class="card">
+              <div class="card-header">
+                  <h4>Sales Data</h4>
+                  <p style="color: rgb(10, 177, 10);font-size: x-small;">Last 6 Months Data</p>
+              </div>
+              <div class="card-body">
+                  <canvas id="salesChart"></canvas>
+              </div>
+          </div>
+      </div>
+      <div class="col-md-4 mb-3">
+          <div class="card">
+              <div class="card-header">
+                  <h4>Payment Analytics</h4>
+              </div>
+              <div class="card-body text-center">
+                  <canvas id="salesDoughnutChart"></canvas>
+              </div>
+          </div>
+      </div>
+  </div>
+
+  <div class="container-fluid mb-3">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-header">
+                    <h4>TOP #5</h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Product Image</th>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col">Sold</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% bestSeller.forEach((product, index) => { %>
+                                <tr>
+                                    <th scope="row"><%= index + 1 %></th>
+                                    <td><img src="/productimages/<%= product.productDetails.images[0] %>" alt="" style="width: 100px; height: 100px;"></td>
+                                    <td><%= product.productDetails._id %></td>
+                                    <td><%= product.productDetails.productName %></td>
+                                    <td><%= product.productDetails.price %></td>
+                                    <td><%= product.totalCount %></td>
+                                </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+      <div class="col-md-10">
+          <div class="card">
+              <div class="card-header">
+                  <h4>Order Analytics</h4>
+              </div>
+              <div class="card-body">
+                  <canvas id="myChart"></canvas>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+<br>
+<br>
+
+
+
+<div id="dateModal" class="modal" style="display: none;">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Select Dates</h5>
+          <button type="button" class="close" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <label for="startDate">Start Date:</label>
+          <input type="date" id="startDate" name="startDate">
+  
+          <label for="endDate">End Date:</label>
+          <input type="date" id="endDate" name="endDate">
+        </div>
+        <div class="modal-footer">
+          <button id="generateReportBtn" class="btn btn-primary">Generate Report</button>
+          <button type="button" class="btn btn-secondary close" style="font-size: medium;border: 2px solid grey;background-color: lightgrey;">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+<script>
+  // Assuming the variables are being set correctly from the server-side
+  var Dcount = '<%= Dcountt %>';
+  var Rcount = '<%= Rcountt %>';
+  var RJcount = '<%= RJcountt %>';
+  var Ccount = '<%= Ccountt %>';
+  var Pcount = '<%= Pcountt %>';
+  var Scount= '<%= Scountt %>'
+
+  var xValues = ["Cancelled", "Delivered", "Returned", "Rejected", "Processed","Shipped"];
+  var yValues = [Ccount, Dcount, Rcount, RJcount, Pcount,Scount];
+  var barColors = ["red", "green", "blue", "orange", "yellow","purple"];
+  
+  new Chart("myChart", {
+    type: "bar",
+    data: {
+      labels: xValues,
+      datasets: [{
+        backgroundColor: barColors,
+        data: yValues
+      }]
+    },
+    options: {
+      legend: { display: false },
+      title: {
+        display: true,
+        text: "Sales Data" // Corrected chart title
+      }
+    }
+  });
+</script>
+  
+<script>
+  var COD='<%= COD %>'
+  var ONLINE='<%= ONLINE %>'
+  var WALLET='<%= WALLET %>'
+
+  document.addEventListener("DOMContentLoaded", function() {
+      var ctx = document.getElementById('salesDoughnutChart').getContext('2d');
+      var salesDoughnutChart = new Chart(ctx, {
+          type: 'doughnut', // Doughnut chart type
+          data: {
+              datasets: [{
+                  data: [COD, ONLINE, WALLET],
+                  backgroundColor: [
+                      'rgb(20, 186, 20)', // Delivered - green
+                      'blue', // Rejected - orang
+                      'orange'
+                  ]
+              }],
+              labels: ['COD','ONLINE PAYMENT', 'WALLET']
+          },
+          options: {
+              responsive: true,
+              plugins: {
+                  legend: {
+                      position: 'left', // Placing legend on the left side
+                  },
+                  tooltip: {
+                      callbacks: {
+                          label: function(tooltipItem) {
+                              return tooltipItem.label + ': ' + tooltipItem.raw ;
+                          }
+                      }
+                  }
+              }
+          }
+      });
+  });
+</script>
+
+</body>
+</html>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+      var ctx = document.getElementById('salesChart').getContext('2d');
+      var salesChart = new Chart(ctx, {
+          type: 'line', // You can change the chart type to 'bar', 'pie', etc.
+          data: {
+              labels: generateLastSixMonths(), // Call the function to generate labels
+              datasets: [{
+                  label: 'Sales',
+                  data: ['<%= Forthmonthh %>', '<%= Threemonthh%>','<%= Twomonthh %>', '<%= lastMPree %>', '<%= lastMM %>', '<%= ThisMonthh %>'],
+                  backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                  borderColor: 'rgba(75, 192, 192, 1)',
+                  borderWidth: 1
+              }]
+          },
+          options: {
+              scales: {
+                  y: {
+                      beginAtZero: true
+                  }
+              }
+          }
+      });
+  });
+
+  function generateLastSixMonths() {
+      var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+      var currentDate = new Date();
+      var labels = [];
+      for (var i = 5; i >= 0; i--) {
+          var monthIndex = (currentDate.getMonth() - i + 12) % 12;
+          labels.push(months[monthIndex]);
+      }
+      return labels;
+  }
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+  const openModalBtn = document.getElementById('openModalBtn');
+  const dateModal = document.getElementById('dateModal');
+  const generateReportBtn = document.getElementById('generateReportBtn');
+  const closeModalBtns = document.querySelectorAll('.close');
+
+  openModalBtn.addEventListener('click', function() {
+    dateModal.style.display = 'block';
+  });
+
+  closeModalBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+      dateModal.style.display = 'none';
+    });
+  });
+
+  generateReportBtn.addEventListener('click', async function() {
+    const startDate = document.getElementById('startDate').value;
+    const endDate = document.getElementById('endDate').value;
+
+    // Perform validation if needed
+    if (!startDate || !endDate) {
+      alert('Please select both start date and end date.');
+      return;
+    }
+
+    // Close modal
+    dateModal.style.display = 'none';
+
+    // Perform AJAX request to generate report with selected dates
+    try {
+      const response = await fetch('/admin/salesReport', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ startDate, endDate })
+      });
+
+      // Handle response as needed
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        window.open(url);
+      } else {
+        console.error('Error generating report:', response.statusText);
+        alert('Error generating report. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error generating report:', error);
+      alert('Error generating report. Please try again.');
+    }
+  });
+});
+
+
+</script>
+
+
+
+
+<%-include("../layout/adminFooter.ejs")-%>

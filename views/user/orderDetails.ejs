@@ -1,0 +1,676 @@
+<%-include("../layout/userHeader.ejs")-%>
+<script src="/javascript/order.js"></script>
+<%-include("../layout/userCentre.ejs")-%>
+<%-include("../partials/userNavbar.ejs")-%>
+
+<style>
+    .checkmark-container {
+        display: inline-flex;
+        align-items: center;
+        margin-right: 22px;
+        margin-top: 11px;
+    }
+    .circle {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        border: 1px solid rgb(25, 210, 25);
+        color:rgb(25, 210, 25); ;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        
+    }
+    .textt {
+        color: rgb(25, 210, 25);
+        font-size: large;
+        margin-left: 10px;
+    }
+</style>
+<style>
+
+.modal-content{
+    background-color: #42469d;
+    border-color: #42469d;
+    border-radius: 1rem;
+}
+@media (min-width: 576px){
+.modal-dialog {
+    max-width: 750px;
+    margin: 1.75rem auto;
+}
+}
+.show{
+    padding: 0;
+}
+.modal-header{
+    border-bottom: none;
+    text-align: center;
+}
+.modal-header .close {
+    padding: 1rem 1rem;
+    margin: -1rem -1rem -1rem 0;
+    color: #fff;
+}
+:-moz-any-link:focus {
+    outline: none;
+}
+.modal-title{
+    line-height: 3rem;
+}
+.modal-body{
+    padding: 1rem;
+}
+#progressbar {
+    margin-bottom: 3vh;
+    overflow: hidden;
+    color: white;
+    padding-left: 0px;
+    margin-top: 3vh
+}
+
+#progressbar li {
+    list-style-type: none;
+    font-size: 0.8rem;
+    width: 25%;
+    float: left;
+    position: relative;
+    font-weight: 400;
+    color: white;
+}
+
+#progressbar #step1:before {
+    content: "";
+    color: white;
+    width: 20px;
+    height: 20px;
+    margin-left: 0px !important;
+}
+
+#progressbar #step2:before {
+    content: "";
+    color: #fff;
+    width: 20px;
+    height: 20px;
+    margin-left: 32%;
+}
+
+#progressbar #step3:before {
+    content: "";
+    color: #fff;
+    width: 20px;
+    height: 20px;
+    margin-right: 32% ; 
+}
+
+#progressbar #step4:before {
+    content: "";
+    color: rgb(151, 149, 149, 0.651);
+    width: 20px;
+    height: 20px;
+    margin-right: 0px !important;
+}
+
+#progressbar li:before {
+    line-height: 29px;
+    display: block;
+    font-size: 12px;
+    background: rgb(151, 149, 149);
+    border-radius: 50%;
+    margin: auto;
+    z-index: -1;
+    margin-bottom: 1vh;
+}
+
+#progressbar li:after {
+    content: '';
+    height: 3px;
+    background: rgb(151, 149, 149, 0.651);
+    position: absolute;
+    left: 0%;
+    right: 0%;
+    margin-bottom: 2vh;
+    top: 8px;
+    z-index: 1;
+}
+.progress-track{
+    padding: 0 8%;
+}
+#progressbar li:nth-child(2):after {
+    margin-right: auto;
+}
+
+#progressbar li:nth-child(1):after {
+    margin: auto;
+}
+
+#progressbar li:nth-child(3):after {
+    float: left;
+    width: 68%;
+}
+#progressbar li:nth-child(4):after {
+    margin-left: auto;
+    width: 132%;
+}
+
+#progressbar li.active:before,
+#progressbar li.active:after {
+    background: white;
+}
+
+#three{
+    font-size: 1.2rem;
+}
+@media (max-width: 767px){
+    #three{
+        font-size: 1rem;
+    } 
+}
+.details{
+    padding: 2rem;
+    font-size: 1.4rem;
+    line-height: 3.5rem;
+}
+
+@media (max-width: 767px){
+.details {
+    padding: 2rem 0;
+    font-size: 1rem;
+    line-height: 2.5rem;
+}
+}
+.d-table{
+    width: 100%;
+}
+.d-table-row{
+    width: 100%;
+}
+.d-table-cell{
+    padding-left: 3rem;
+}
+@media (max-width: 767px){
+    .d-table-cell{
+        padding-left: 1rem;
+    } 
+}
+.col-3{
+    display: grid;
+    text-align: end;
+}
+.col-3 .d-table-row{
+    align-self: flex-end;
+}
+.fa{
+    font-size: xx-large;
+    text-align: center;
+    width: 3rem;
+    padding: 0.5rem;
+    color: #42469d;
+    background-color: #fff;
+    border-radius: 2rem;
+    bottom: 0;
+    right: 0;
+}
+
+</style>
+
+<!-- <style>
+    .progressbar {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+.progressbar li {
+    width: 25%;
+    height: 10px;
+    background-color: #ddd;
+}
+
+.progressbar li.active {
+    background-color: #007bff;
+}
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.progressbar li.active i {
+    animation: pulse 1s infinite;
+}
+
+</style> -->
+<div class="container" style="margin-top: 100px;">
+    <div class="row">
+        <hr>
+        <div class="col-xl-8" style="max-height:1000px; overflow-y: auto;height: 1000px;">
+
+            <% usrOdr.products.forEach((data,index)=> { %>
+
+                <div class="card ">
+                    <div class="card-body">
+
+                        <div class="d-flex align-items-start border-bottom pb-3">
+                            <div class="me-4">
+                                <img  src="/productimages/<%=data?.productid?.images[0]%>" alt=""
+                                    class="avatar-lg rounded" style="width:100px">
+                            </div>
+                            <div class="flex-grow-1 align-self-center overflow-hidden">
+                                <div>
+                                    <h5 class="text-truncate font-size-18"><a href="#" class="text-dark">
+                                            <%= data?.productid?.productName%>
+                                        </a></h5>
+                                    <p class="text-muted mb-0">
+                                        <i class="bx bxs-star text-warning"></i>
+                                        <i class="bx bxs-star text-warning"></i>
+                                        <i class="bx bxs-star text-warning"></i>
+                                        <i class="bx bxs-star text-warning"></i>
+                                        <i class="bx bxs-star-half text-warning"></i>
+                                    </p>
+                                    <p class="mb-0 mt-1">Category : <span class="fw-medium">
+                                            <%= data?.productid?.Category.categoryname%>
+                                        </span></p>
+                                </div>
+                            </div>
+                            <div class="flex-shrink-0 ms-2">
+                                <ul class="list-inline mb-0 font-size-16">
+                                    <li class="list-inline-item">
+                                        <a href="#" class="text-muted px-1">
+                                            <i class="mdi mdi-trash-can-outline"></i>
+                                        </a>
+                                    </li>
+                                    <li class="list-inline-item">
+                                        <a href="#" class="text-muted px-1">
+                                            <i class="mdi mdi-heart-outline"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="mt-3">
+                                        <p class="text-muted mb-2">Price</p>
+                                        <h6 class="mb-0 mt-2">₹ <%=
+                                                        data?.productid?.grandprice%>
+                                                    <span class="text-muted me-2"><del
+                                                            class="font-size-16 fw-normal" style="font-size: small;">₹ <%=
+                                                data?.productid?.price%>
+                                            </del></span>
+                                        </h6>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-5">
+                                    <div class="mt-3" style="margin-left: 50px;">
+                                        <p class="text-muted mb-2">Quantity</p>
+                                        <div class="d-inline-flex" style="margin-left: 20px;">
+                                            <span>
+                                                <%= data.quantity%>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-3">
+                                    <div class="mt-4">
+                                        <% if (data.status=="Cancelled") { %>
+                                            <span class="badge rounded-pill bg-danger"
+                                            style="font-weight: 400;margin-left: 38px">
+                                            <%= data.status %>
+                                        </span>
+                                        <% } else if (data.status=="Processed") { %>
+                                            <span class="badge rounded-pill bg-warning"
+                                            style="font-weight: 400;margin-left: 38px">
+                                            <%= data.status %>
+                                        </span>
+                                        <% } else if (data.status=="Confirmed") { %>
+                                            <span class="badge rounded-pill bg-info"
+                                            style="font-weight: 400;margin-left: 38px">
+                                            <%= data.status %>
+                                        </span>
+                                        <% } else if (data.status=="Shipped") { %>
+                                            <span class="badge rounded-pill bg-success"
+                                            style="font-weight: 400;margin-left: 38px">
+                                            <%= data.status %>
+                                        </span>
+                                        <% } else if (data.status=="Rejected") { %>
+                                            <span class="badge rounded-pill bg-danger"
+                                            style="font-weight: 400;margin-left: 38px">
+                                            <%= data.status %>
+                                        </span>
+                                        
+
+                                        <% } %>
+
+
+                                    </div>
+                                  
+                                </div>
+                            </div>
+                            <div class="text-start mt-4" style="margin-bottom: 13px;">
+                                <a href="/uniqueproduct/<%-data?.productid?._id-%>" 
+                                    class="btn btn-outline-primary btn-sm" >Buy Again</a>
+                            </div>
+                        </div>
+
+                        <div class="d-flex flex-column align-items-end" style="margin-top: -20px;">
+                            <% if (usrOdr.orderStatus === "Returned" || data.status==='Returned') { %>
+                                <div class="checkmark-container">
+                                    <span class="circle">&check;</span>
+                                    <span class="textt">refund initiated</span>
+                                </div>
+                            <% } else { %>
+                                <% if (usrOdr.orderStatus === "Order Delivered" && data.status!="Cancelled"  && usrOdr.orderStatus !="Returned") { %>
+                                    <a href="/return/<%-index %>/<%-usrOdr.userid-%>/<%-usrOdr?._id-%>/<%-data._id-%>" class="btn btn-primary btn-sm me-2">Return</a>
+                                    <br>
+                                    <form action="/invoice/<%-index %>/<%-usrOdr?._id-%>/<%-data.productid?._id-%>" method="GET" id="downloadForm">
+                                        <button class="btn btn-primary" type="submit" style="border: none; border-radius: 5px; color: white;" id="downloadButton">Download Invoice</button>
+                                    </form>
+
+                                <% } %>
+                                
+                                <% if (usrOdr.orderStatus!="Order Delivered" && usrOdr.orderStatus!="Order Rejected" && usrOdr.orderStatus!="Cancelled" && usrOdr.orderStatus!="Returned") { %>
+                                    <a class="btn btn-outline-danger btn-sm" onclick="cancelSingleProduct('<%-data.productid._id-%>','<%- usrOdr._id -%>','<%= index %>')">Cancel</a>
+                                <% } %>
+                            <% } %>
+                        </div>
+                        
+
+                    </div>
+                </div>
+                <!-- end card -->
+
+
+
+                <% }) %>
+
+
+
+
+                    <div class="row my-4">
+                        <div class="col-sm-6">
+                            <a href="/allproduct" class="btn btn-link text-muted">
+                                <i class="mdi mdi-arrow-left me-1"></i> Continue Shopping </a>
+                        </div> <!-- end col -->
+                        
+                        
+                        <div class="col-sm-6">
+
+
+
+
+                            
+                            <% if (usrOdr.orderStatus!="Order Delivered" && usrOdr.orderStatus!="Cancelled" && usrOdr.orderStatus!="Order Rejected" && usrOdr.orderStatus!="Returned") { %>
+
+
+                                <div class="text-sm-end mt-2 mt-sm-0">
+                                    <a href="#tracker" class="btn btn-info" data-toggle="modal" data-target="#myModal">Track the order</a>
+                                    <a class="btn btn-danger" onclick="cancelOrder('<%= usrOdr._id %>')">
+                                        <i class="mdi mdi-cart-outline me-1"></i> Cancel All </a>
+                                    
+                                </div>
+
+                                <% } %>
+                                <% if (usrOdr.orderStatus=="Order Delivered") { %>
+                                    <div class="text-sm-end mt-2 mt-sm-0">
+                                    <a href="#tracker" class="btn btn-info" data-toggle="modal" data-target="#myModal">Track the order</a>
+                                </div>
+                                    <% } %>
+
+                        </div> <!-- end col -->
+                    </div> <!-- end row-->
+        </div>
+
+        <div class="col-xl-4">
+
+            <div class="mt-5 mt-lg-0">
+                <div class="card " >
+                    <div class="card-header bg-transparent border-bottom py-3 px-4">
+                        <h5 class="font-size-16 mb-0">Order Summary: <span class="float-end"
+                                style="font-size: 14px;margin-top: 5px;"></span></h5>
+                    </div>
+                    <div class="card-body p-4 pt-2">
+
+                        <div class="table-responsive">
+                            <table class="table mb-0">
+                                <tbody>
+
+                                    <tr>
+                                        <td>Sub Total :</td>
+                                        <td class="text-end" style="color: red;">₹ <%= usrOdr.totalAmount + usrOdr.discountAmount + usrOdr.couponDiscount %>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Discount : </td>
+                                        <td class="text-end">- ₹  <%= usrOdr.discountAmount%>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Coupon Discount : </td>
+                                        <td class="text-end">
+                                            - ₹ <%= usrOdr.couponDiscount ? usrOdr.couponDiscount : 0 %>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>Shipping Charge :</td>
+                                        <td class="text-end" style="color: green;">Free</td>
+                                    </tr>
+
+                                    <tr class="bg-light">
+                                        <th>Total :</th>
+                                        <td class="text-end">
+                                            <span class="fw-bold">
+                                                ₹ <%= usrOdr.totalAmount %>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- end table-responsive -->
+                    </div>
+               
+           
+
+            
+                <hr>
+                    <div class="card-header bg-transparent border-bottom py-3 px-4">
+                        <h5 class="font-size-16 mb-0">Address: <span class="float-end"
+                                style="font-size: 14px;margin-top: 5px;"></span></h5>
+                    </div>
+                    <div class="card-body p-4 pt-2">
+
+                        <div>
+                            <address>
+                                <strong>
+                                    <%= usrOdr.address.name%>
+                                </strong><br>
+
+                                <%= usrOdr.address.address%>
+                                    <%= usrOdr.address.locality%><br>
+                                        <%= usrOdr.address.city%>
+                                            <span>
+                                                <%= usrOdr.address.district%>
+                                            </span> <br>
+                                            <span title="Phone">PIN:</span>
+                                            <%= usrOdr.address.pincode%>
+                            </address>
+
+                        </div>
+                        <!-- end table-responsive -->
+                    </div>
+               
+            
+           
+                <hr>
+                    <div class="card-header bg-transparent border-bottom py-3 px-4">
+                        <h5 class="font-size-16 mb-0">Order Details: <span class="float-end"
+                                style="font-size: 14px;margin-top: 5px;"></span></h5>
+                    </div>
+                    <div class="card-body p-4 pt-2">
+                        <div>
+                            <h6>Order Id: <br><span style="font-weight: 400;font-size: 14px;">
+                                    # <%= usrOdr.DorderId %>
+                                </span></h6>
+                            <br>
+                            <h6>Order Status: <br><span class="badge rounded-pill bg-info"
+                                    style="font-weight: 400;">
+                                    <%= usrOdr.orderStatus %>
+                                </span></h6>
+                            <br>
+                            <h6>Payment Method: <br><span style="font-weight: 400;font-size: 14px;">
+                                 <%= usrOdr.paymentMethod %>
+                            </span></h6>
+                            <br>
+                            <h6>Payment Status: <br><span style="font-weight: 500;font-size: 14px;color: green;">
+                                 <%= usrOdr.PaymentStatus %>
+                            </span></h6>
+                            
+                            <br>
+                            <% if (usrOdr.orderStatus=="Order Delivered" ) { %>
+
+                                <h6>Delivered Date & Time: <br><span style="font-weight: 400;font-size: 14px;"><%-
+                                            usrOdr.deliveryDate.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' ,
+                                            dateStyle: 'short' , timeStyle: 'short' }) %></span></h6>
+                                <br>
+
+                                <% } else { %>
+
+                                    <h6>Expected Delivery Date & Time: <br><span
+                                            style="font-weight: 400;font-size: 14px;"><%-
+                                                usrOdr.expectedDeliveryDate.toLocaleString('en-IN', {
+                                                timeZone: 'Asia/Kolkata' , dateStyle: 'short' , timeStyle: 'short'
+                                                }) %></span></h6>
+                                    <br>
+                                    <% } %>
+                        </div>
+                        <!-- end table-responsive -->
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+    <hr>
+    <!-- end row -->
+
+</div>
+
+  <% if (usrOdr.orderStatus != "Cancelled" && usrOdr.orderStatus!="Order Rejected" || usrOdr.orderStatus=="Order Delivered") { %>
+  <!-- The Modal -->
+  <div class="modal fade" id="myModal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title mx-auto">Order Status<br>#<%= usrOdr._id%></h4>
+          <button id="Mclose" style="background-color: lightgrey;color:black;width: 50px;height: 50px;border: 2px solid rgb(238, 237, 237);margin-right: 10px;display: flex;align-items: center;" type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div class="progress-track">
+              <ul id="progressbar">
+                <% if (usrOdr.orderStatus == "Order Processed") { %>
+                  <li class="step0 active " id="step1"><span id="three">Order placed</span></li>
+                  <% } else if (usrOdr.orderStatus == "Order Confirmed") { %>
+                    <li class="step0 active " id="step1">Order placed</li>
+                  <li class="step0 active text-center" id="step2"><span id="three">In Transit</span></li>
+                  <% } else if (usrOdr.orderStatus == "Order Shipped") { %>
+                    <li class="step0 active " id="step1">Order placed</li>
+                  <li class="step0 active text-center" id="step2">In Transit</li>
+                  <li class="step0 active text-center" id="step3"><span id="three">Out for Delivery</span></li>
+                  <% } else if (usrOdr.orderStatus == "Order Delivered") { %>
+                    <li class="step0 active text-center" id="step1">Order placed</li>
+                    <li class="step0 active text-center" id="step2">In Transit</li>
+                    <li class="step0 active text-center" id="step3">Out for Delivery</li>
+                    <li class="step0 active text-center" id="step4"><span id="three">Delivered</span></li>
+                  <% } %>
+              </ul>
+          </div>
+          <div class="row">
+            <div class="col-9">
+              <div class="details d-table">
+                <div class="d-table-row">
+                  <div class="d-table-cell">
+                    Shipped with
+                  </div>
+                  <div class="d-table-cell">
+                    UPS Expedited
+                  </div>
+                </div>
+                <div class="d-table-row">
+                  <div class="d-table-cell">
+                    Estimated
+                  </div>
+                  <div class="d-table-cell">
+                    <%= usrOdr.expectedDeliveryDate.toLocaleString('en-IN', {
+                        timeZone: 'Asia/Kolkata' , dateStyle: 'short' , timeStyle: 'short'
+                        }) %>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+          </div>      
+        </div>                  
+    </div>
+  </div>
+  </div>
+  <% } %>
+<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    $(document).ready(function() {
+        $('#returnForm').on('submit', function(e) {
+            e.preventDefault();
+
+            $.ajax({
+        url:'/return',
+        method:'get',
+        success: function (response) {
+          Swal.fire({
+            text: response.msg,
+            icon: 'success',
+            timer: 3000,
+            showConfirmButton: false
+        });
+          setTimeout(function () {
+              window.location.reload();
+          }, 1000);
+      },
+      error: function (err) {
+          Toastify({
+              text: "Something Error",
+              duration: 3000,
+              gravity: "top",
+              position: "center",
+              backgroundColor: "red",
+              stopOnFocus: true,
+          }).showToast();
+          console.log(err);
+      }
+      })
+        });
+    });
+</script>
+<%-include("../partials/userFooter.ejs")-%>
+<%-include("../layout/userFooter.ejs")-%>

@@ -1,0 +1,71 @@
+<%-include("../layout/userHeader.ejs")-%>
+<%-include("../layout/userCentre.ejs")-%>
+<%-include("../partials/userNavbar.ejs")-%>
+
+<style>
+    .card {
+      transition: transform 0.3s ease-in-out;
+    }
+  
+    .card:hover {
+      transform: scale(1.05); /* Scale up on hover */
+    }
+  
+    .card-img-top {
+      height: 200px;
+      object-fit: cover;
+    }
+  
+    .card-body {
+      text-align: center;
+    }
+  
+    .card h6 {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+  
+    .card h6.price {
+      font-size: 16px;
+      margin-top: -10px;
+    }
+  
+    .btn-view {
+      margin-top: 10px;
+    }
+  </style>
+  
+  <section class="py-5 mt-5 mb-5">
+    <div class="container mb-5 mt-5">
+      <div class="row justify-content-center">
+        <!-- content -->
+        <div class="col-12">
+  
+          <% if (searchTerm) { %>
+            <!-- <h3>Search product for "<%= searchTerm %>"</h3> -->
+          <% } %>
+          
+          <div class="row" id="gridViewSection">
+            <% searchResults.forEach(data => { %>
+              <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
+                <div class="card h-100">
+                  <img src="/productimages/<%= data.images[0] %>" class="card-img-top" alt="<%-data.productName-%>">
+                  <div class="card-body d-flex flex-column">
+                    <h6><%-data.productName-%></h6>
+                    <h6 class="price">₹ <%-data.price-%></h6>
+                    <% if (locals.check) { %>
+                      <a href="/uniqueproduct/<%-data._id-%>" class="btn btn-outline-primary btn-view">View</a>
+                    <% } %>
+                  </div>
+                </div>
+              </div>
+            <% }) %>
+          </div>
+  
+        </div>
+      </div>
+    </div>
+  </section>
+  
+<%-include("../partials/userFooter.ejs")-%>
+<%-include("../layout/userFooter.ejs")-%>

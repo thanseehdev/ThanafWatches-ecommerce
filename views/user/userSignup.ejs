@@ -1,0 +1,265 @@
+<%-include("../layout/userHeader.ejs")-%>
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<%-include("../layout/userCentre.ejs")-%>
+
+<!-- <style>
+  .btn-success {
+      border:1px solid yellow !important;
+      background-color: black;
+      border: none;
+      border-radius: 5px;
+      color: yellow;
+      transition: background-color 0.3s ease;
+    }
+    .btn-success:hover {
+      background-color: yellow;
+      color:black;
+    }
+    .text-body {
+    color: green !important; /* Default text color */
+    text-decoration: none; /* Remove underline by default */
+  }
+
+  .text-body:hover {
+    color: blue !important; /* Text color on hover */
+  }
+  #username{
+    border: 1px solid grey;
+  }
+  #email{
+    border: 1px solid grey;
+  }
+  #password{
+    border: 1px solid grey;
+  }
+  #confirmpassword{
+    border: 1px solid grey;
+  }
+</style> -->
+
+
+<style>
+  body {
+      background-color: black;
+    background-size: cover; /* Cover the entire area */
+    background-position: center; /* Center the image */
+    }
+  .signup-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+  }
+  .signup-box {
+      max-width: 800px;
+      width: 100%;
+      background: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      display: flex;
+  }
+  .signup-image {
+      flex: 1;
+      background-image: url("https://www.rado.com/media/sgecom_contentsystem/Warranty-Extension/warranty-extension-homepage-block.jpg?im=Resize=(800,657),aspect=fill;Crop=(0,0,800,657),gravity=Center"); /* Replace with your image URL */
+      background-size: cover;
+      background-position: center;
+  }
+  .signup-form {
+      flex: 1;
+      padding: 50px;
+  }
+  .signup-form h2 {
+      margin-bottom: 30px;
+  }
+  .form-control {
+      margin-bottom: 20px;
+  }
+  .btn-primary {
+      background-color: #f0ad4e;
+      border: none;
+  }
+  .btn-primary:hover {
+      background-color: #ec971f;
+  }
+  .custom-control-label::before {
+      background-color: #f0ad4e;
+  }
+</style>
+
+<div class="signup-container">
+  <div class="signup-box">
+      <div class="signup-image"></div>
+      <div class="signup-form">
+          <h2>Sign Up</h2>
+          <form action="/signup" method="post" onsubmit="validateForm()">
+            <input type="hidden" value="1" name="status">
+              <div class="form-group">
+                  <label for="username">Name</label>
+                  <input type="text" class="form-control" id="username" name="name" placeholder="Name" oninput="validateUsername()" autocomplete="new-username">
+                  <p id="username-error" class="error-message" style="color: red; margin-bottom: 10px; font-size: small;"></p>
+              </div>
+              <div class="form-group">
+                  <label for="email">Email</label>
+                  <input type="email" class="form-control" id="email" name="email" placeholder="Email" oninput="validateEmail()" autocomplete="new-email">
+                  <p id="email-error" class="error-message" style="color: red; margin-bottom: 10px; font-size: small;"></p>
+              </div>
+              <div class="form-group">
+                  <label for="password">Password</label>
+                  <input type="password" class="form-control" id="password" name="password" placeholder="Password" oninput="validatePassword()" autocomplete="new-password">
+                  <p id="password-error" class="error-message" style="color: red; margin-bottom: 10px; font-size: small;"></p>
+              </div>
+              <div class="form-group">
+                  <label for="confirmpassword">Confirm Password</label>
+                  <input type="password" class="form-control" id="confirmpassword" placeholder="Confirm Password" oninput="validateConfirmPassword()" autocomplete="new-confirm-password">
+                  <p id="confirmpassword-error" class="error-message" style="color: red; margin-bottom: 10px; font-size: small;"></p>
+                  <input type="text" name="referralCode" id="referralCode" placeholder="Referral Code" autocomplete="new-referral-code">
+              </div>
+              <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
+              <div class="text-center mt-3">
+                  <p>Already a member? <a href="/login">Sign In</a></p>
+              </div>
+          </form>
+      </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const referralCode = urlParams.get('referralCode');
+    if (referralCode) {
+      document.getElementById('referralCode').value = referralCode;
+    }
+  });
+</script>
+<script>
+function validateUsername() {
+    var usernameInput = document.getElementById('username');
+    var usernameError = document.getElementById('username-error');
+    var usernameValue = usernameInput.value;
+
+    // Check for spaces
+    if (/\s/.test(usernameValue)) {
+        usernameError.textContent = 'Username cannot contain spaces';
+        usernameInput.setCustomValidity('');
+    } else {
+        // Check for uppercase letters
+        if (/[A-Z]/.test(usernameValue)) {
+            usernameError.textContent = 'Username cannot contain uppercase letters';
+            usernameInput.setCustomValidity('');
+        } else {
+            // Check for numbers or dots
+            if (/[0-9.]/.test(usernameValue)) {
+                usernameError.textContent = 'Username cannot contain numbers or dots';
+                usernameInput.setCustomValidity('');
+            } else {
+                // Check for non-letter characters
+                if (/[^a-z]/.test(usernameValue)) {
+                    usernameError.textContent = 'Username can only contain  letters';
+                    usernameInput.setCustomValidity('');
+                } else {
+                    usernameError.textContent = '';
+                    usernameInput.setCustomValidity('');
+                }
+            }
+        }
+    }
+    updateCreateButtonState();
+}
+
+
+  function validateEmail() {
+    var emailInput = document.getElementById('email');
+    var emailError = document.getElementById('email-error');
+    var emailValue = emailInput.value;
+  
+    // Check for spaces
+    if (/\s/.test(emailValue)) {
+      emailError.textContent = 'Email cannot contain spaces';
+      emailInput.setCustomValidity('');
+    } else {
+      emailError.textContent = '';
+      // Common email validation
+      var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(emailValue)) {
+        emailError.textContent = 'Invalid email format';
+        emailInput.setCustomValidity('');
+      } else {
+        emailError.textContent = '';
+        emailInput.setCustomValidity('');
+      }
+    }
+    updateCreateButtonState();
+  }
+  
+  function validatePassword() {
+    var passwordInput = document.getElementById('password');
+    var passwordError = document.getElementById('password-error');
+    var passwordValue = passwordInput.value;
+  
+    // Password criteria: At least 8 characters, one uppercase letter, one lowercase letter, and one digit
+    var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+  
+    if (!passwordRegex.test(passwordValue)) {
+      passwordError.textContent = 'Password must be at least 8 characters and include one uppercase letter, one lowercase letter, and one digit';
+      passwordInput.setCustomValidity('');
+    } else {
+      passwordError.textContent = '';
+      passwordInput.setCustomValidity('');
+    }
+  
+    updateCreateButtonState();
+  }
+  function validateConfirmPassword() {
+    var passwordInput = document.getElementById('password');
+    var confirmPasswordInput = document.getElementById('confirmpassword');
+    var confirmPasswordError = document.getElementById('confirmpassword-error');
+    var confirmPasswordValue = confirmPasswordInput.value;
+
+    // Check if password and confirm password match
+    if (passwordInput.value !== confirmPasswordValue) {
+      confirmPasswordError.textContent = 'Passwords do not match';
+      confirmPasswordInput.setCustomValidity('');
+    } else {
+      confirmPasswordError.textContent = '';
+      confirmPasswordInput.setCustomValidity('');
+    }
+
+    updateCreateButtonState();
+  }
+  
+  function updateCreateButtonState() {
+    
+    var usernameError=document.getElementById('username-error').textContent;
+    var emailError = document.getElementById('email-error').textContent;
+    var passwordError = document.getElementById('password-error').textContent;
+    var confirmPasswordError=document.getElementById('confirmpassword-error').textContent;
+    
+    // Disable the button if there are any errors
+    // createButton.disabled =  emailError || passwordError;
+    document.getElementById('buttonC').disabled =usernameError||emailError || passwordError||confirmPasswordError
+  }
+  
+  function validateForm() {
+    
+    validateUsername()
+    validateEmail();
+    validatePassword();
+    validateConfirmPassword()
+    
+  
+    // Additional form validation logic can be added here
+  
+    // Return true if the form is valid, false otherwise
+    return document.querySelector('.error-message').textContent === '';
+  }
+  
+  
+  
+  </script>
+
+<%-include("../layout/userFooter.ejs")-%>

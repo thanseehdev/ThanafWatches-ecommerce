@@ -1,0 +1,335 @@
+<%-include("../layout/userheader.ejs")-%>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<%-include("../layout/usercentre.ejs")-%>
+<script src="/javascript/wishlistAjax.js"></script>
+<style media="screen">
+    figure.zoom {
+        background-position: 50% 50%;
+        position: relative;
+        /* margin: 150px auto; */
+        /* border: 5px solid white;
+        box-shadow: -1px 5px 15px black; */
+        /* height: 400px;
+        width: 520px; */
+        width: 100%;
+        height: 370px;
+        overflow: hidden;
+        cursor: zoom-in;
+      
+    }
+  
+    figure.zoom img:hover {
+        opacity: 0;
+    }
+  
+    figure.zoom img {
+        transition: opacity 0.5s;
+        display: block;
+        width: 100%;
+  
+    }
+  
+    .small-images {
+        max-width: 120px;
+    }
+    #heartT:hover {
+    background-color:rgb(252, 151, 168) !important;
+    color:white
+}
+  </style>
+ <style>
+    .small-ratings i {
+        font-size: 24px;
+        color: lightgrey;
+        cursor: pointer;
+    }
+    .small-ratings i.selected, .small-ratings i:hover, .small-ratings i:hover {
+        color:gold
+    }
+
+        /* Hide the scrollbar pointer */
+::-webkit-scrollbar {
+    width: 0; /* This will remove the scrollbar but still allow scrolling */
+}
+
+/* Optional: Customize scrollbar track and thumb */
+::-webkit-scrollbar-track {
+    background: transparent; /* You can set your desired background color */
+}
+
+::-webkit-scrollbar-thumb {
+    background: transparent; /* You can set your desired thumb color */
+}
+</style>
+<%-include("../partials/usernavbar.ejs")-%>
+<script src="/javascript/cartAjax.js"></script>
+
+<div class="container-fluid mb-5 mt-5" style="display: block;">
+  <div class="row">
+      <div class="col-lg-6 col-md-12 mt-5 mb-5" style="display: flex;justify-content: center;align-items: center;">
+          <div class="preview" style="border: 2px solid rgb(245, 241, 241);">
+              <div class="mb-3" style="max-height: 400px; overflow: hidden;">
+                  <a data-fslightbox="mygalley" class="rounded-4" target="_blank" data-type="image">
+                     
+                          <figure class="zoom" onmousemove="zoom(event)" id="main-bg"
+                          style="background-image: url('/productimages/<%- product.images[0] -%>');background-size:200%;">
+                <img style="width: 100%;height: 100%; margin: auto;"  class="rounded-8 fit" src="/productimages/<%- product.images[0]-%>" id="mainimg" />
+
+            </figure>
+                  </a>
+              </div>
+              <div class="mb-3" style="display: flex;justify-items: center;">
+                  <% product.images.forEach((ele,index) => { %>
+                  <a data-fslightbox="mygalley" target="_blank" data-type="image">
+                      <img width="70" height="60" style="margin-left: 19px; border: 1px solid rgb(235, 208, 208); border-radius: 5px;" src="/productimages/<%= ele%>" onclick="change('<%-index+1-%>')" id="img<%-index+1-%>" />
+                  </a>
+                  <% }) %>
+                  &nbsp;
+                  &nbsp;
+                  &nbsp;
+                  <button class="like btn btn-default" id="heartT" style="background-color: pink; border-radius: 0px; height:45px;border-top-left-radius: 6px;border-bottom-left-radius: 6px;" onclick="addTowishlist('<%-product._id-%>')">
+                    <span class="bi bi-heart"></span>
+                </button>
+                
+              </div>
+              
+          </div>
+      </div>
+      <div class="col-lg-6 col-md-12 mt-3" >
+          <div class="details" style="padding-left: 15px; padding-top: 40px;">
+              <h3 class="product-title"><%= product.productName %></h3>
+              <div class="rating">
+                  <div class="stars">
+                      <span class="bi bi-star-fill " style="color: rgb(255, 230, 7);"></span>
+                      <span class="bi bi-star-fill" style="color: rgb(255, 230, 7);"></span>
+                      <span class="bi bi-star-fill" style="color: rgb(255, 230, 7);"></span>
+                      <span class="bi bi-star"></span>
+                      <span class="bi bi-star"></span>
+                  </div>
+                  <span class="review-no">41 reviews</span>
+              </div>
+              <h4 class="price" style="color: grey;">MRP: <span class="bi bi-currency-rupee"><%=product.price-product.discountAmount%></span></h4>
+              <p style="color: rgb(62, 179, 62);">Inclusive of all taxes</p>
+              <h4 class="product-details" style="font-family: sans-serif;">Product Details</h4>
+              <ul class="product-details">
+                  <li style="color: grey;"><%=product.Specification1%></li>
+                  <li style="color: grey;"><%=product.Specification2%></li>
+                  <li style="color: grey;"><%=product.Specification3%></li>
+                  <li style="color: grey;"><%=product.Specification4%></li>
+              </ul>
+              <div class="action">
+                 
+                  <% if (checkcart) { %>
+                  <a href="/cart">
+                      <button class="go-to-cart btn" style="background-color: green; color: white; border-radius: 4px; height: 45px;"><i class="bi bi-cart4" style="font-size: 20px;"></i>Go to Cart</button>
+                  </a>
+                  <% } else { %>
+                  <% if (product.stockQuantity <= 0) { %>
+                  <a class="disabled" style="width: 10px; height: 20px;">
+                      <button class="add-to-cart btn btn-default" style="background-color: grey; color: white; border-radius: 3px; height: 45px;" onclick="addTocart('<%-product._id-%>')"><i class="bi bi-cart4" style="font-size: 20px;"></i>Out of Stock</button>
+                  </a>
+                  <% } else { %>
+                  <a>
+                      <button class="add-to-cart btn btn-default" style="background-color: rgb(24, 127, 24); color: white; border-radius: 3px; height: 45px;" onclick="addTocart('<%-product._id-%>')"><i class="bi bi-cart4" style="font-size: 20px;"></i>Add to Cart</button>
+                  </a>
+                  <% } %>
+                  <% } %>
+                  <br><br>
+                  <h5>PRODUCT-DESCRIPTION</h5>
+                  <h5 style="background-color: grey; height: 1px;"></h5>
+                  <p class="product-description" style="color: grey;">&nbsp;&nbsp;&nbsp;<%=product.Description %>.</p>
+              </div>
+          </div>
+      </div>
+  </div>
+
+  <hr class="mt-5 mb-3" style="color: rgb(196, 184, 184);">
+
+  
+  <div class="container mt-4">
+    <h5 class="mt-2" style="color:rgb(53, 224, 53)">Submit a Review</h5>
+    <form id="reviewForm">
+        <input type="hidden" name="userId" value="">
+        <div class="form-group">
+            <div class="mt-1 d-flex justify-content-between align-items-center">
+                <div class="small-ratings">
+                    <i class="fa fa-star" data-index="0"></i>
+                    <i class="fa fa-star" data-index="1"></i>
+                    <i class="fa fa-star" data-index="2"></i>
+                    <i class="fa fa-star" data-index="3"></i>
+                    <i class="fa fa-star" data-index="4"></i>
+                </div>
+                <input type="hidden" name="rating" id="ratingValue" value="">
+                <input type="hidden" name="productId" id="productId" value="<%= product._id %>">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="comment">Comment:</label>
+            <textarea class="form-control" name="comment" id="comment" rows="1" required style="max-width: 600px;"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary mt-2">Submit Review</button>
+    </form>
+    
+</div>
+
+
+
+<div class="container mt-5 mb-5" style="max-height: 400px; overflow-y: auto;">
+    <p style="border-bottom: 1px solid rgb(234, 228, 228);">Recent Reviews</p>
+    <div class="row">
+        <% if (reviews.length==0) { %>
+            <span class="d-flex justify-content-center">
+                <h3>No Reviews Yet..</h3>
+            </span>
+            <% } else { %>
+        <% reviews.forEach((x)=> {%>
+    <div class="col-md-4">
+        <div class="card mt-2" style="background-color: rgba(248, 244, 244, 0.5);">
+            <h6 style="margin-left: 10px;margin-top: 20px;"><%=x.userId.name%></h6>
+            <h6 style="margin-left: 10px;font-weight: 300;margin-top: 4px;"><%= x.createdAt.toLocaleDateString('en-IN', { timeZone: 'Asia/Kolkata' }) %></h6>
+            <button style="margin-left: 10px;margin-top: 4px;width: 70px;margin-bottom: 4px;font-size: x-small;background-color: black;color: white;border-radius: 3px;font-weight: bold;">&check;&nbsp;Verified</button>
+            
+            <div class="mt-1 d-flex justify-content-between align-items-center">
+                <div class="small-ratings" style="margin-left: 10px;">
+            <% if (x.rating ==1) { %>
+                <i style="color: gold" class="fa fa-star"></i>
+            <% } else if (x.rating ==2) { %>
+                <i style="color: gold" class="fa fa-star"></i>
+                <i style="color: gold;" class="fa fa-star"></i>
+            <% } else if (x.rating ==3) { %>
+                <i style="color: gold" class="fa fa-star"></i>
+                <i style="color: gold;" class="fa fa-star"></i>
+                <i style="color: gold;" class="fa fa-star"></i>
+            <% } else if (x.rating ==4) { %>
+                <i style="color: gold" class="fa fa-star"></i>
+                <i style="color: gold;" class="fa fa-star"></i>
+                <i style="color: gold;" class="fa fa-star"></i>
+                <i style="color: gold;" class="fa fa-star"></i>
+            <% } else if (x.rating ==5) { %>
+                <i style="color: gold" class="fa fa-star"></i>
+                <i style="color: gold;" class="fa fa-star"></i>
+                <i style="color: gold;" class="fa fa-star"></i>
+                <i style="color: gold;" class="fa fa-star"></i>
+                <i style="color: gold;" class="fa fa-star"></i>
+            <% } %>
+            </div>
+            </div>
+
+            <h6 style="margin-left: 10px;margin-bottom: 20px;margin-top: 4px;"><%=x.comment%></h6>
+        </div>
+    </div>
+    
+    <%}) %>
+    <% } %>
+</div>
+</div>
+
+
+</div>
+
+<script>
+    document.getElementById('reviewForm').addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        const ratingValue = document.getElementById('ratingValue').value;
+        const comment = document.getElementById('comment').value;
+        const productId = document.getElementById('productId').value;
+
+        const data = {
+            rating: ratingValue,
+            comment: comment,
+            productId: productId
+        };
+
+        try {
+            const response = await fetch('/productReview', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                Swal.fire({
+                    title: 'Thank You',
+                    text: result.mes,
+                    icon: 'success'
+                }).then(() => {
+                    window.location.reload();
+                });
+            } else {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'There was an error submitting your review. Please try again.',
+                    icon: 'error'
+                });
+            }
+        } catch (error) {
+            Swal.fire({
+                title: 'Error',
+                text: 'There was a problem with the server. Please try again later.',
+                icon: 'error'
+            });
+        }
+    });
+</script>
+
+
+
+<script>
+  function change(data){
+    var mainimg=document.getElementById('mainimg').src
+    console.log(mainimg)
+   
+      console.log("ok")
+      imgs=document.getElementById(`img${data}`).src
+      document.getElementById('mainimg').src=imgs
+      document.getElementById('main-bg').style.backgroundImage = `url(${imgs})`;
+  
+  }
+  
+  </script>
+  
+  <script type="text/javascript">
+function zoom(e) {
+    var zoomer = e.currentTarget;
+    var offsetX, offsetY, x, y;
+    if (e.offsetX) {
+        offsetX = e.offsetX;
+        offsetY = e.offsetY;
+    } else if (e.touches) {
+        offsetX = e.touches[0].pageX - zoomer.offsetLeft;
+        offsetY = e.touches[0].pageY - zoomer.offsetTop;
+    }
+    x = (offsetX / zoomer.offsetWidth) * 100;
+    y = (offsetY / zoomer.offsetHeight) * 100;
+    zoomer.style.backgroundPosition = x + '% ' + y + '%';
+}
+
+
+  </script>
+
+<script>
+    const stars = document.querySelectorAll('.fa-star');
+    const ratingValue = document.getElementById('ratingValue');
+
+    stars.forEach((star, index) => {
+        star.addEventListener('click', () => {
+            ratingValue.value = index + 1;
+            stars.forEach((s, i) => {
+                if (i <= index) {
+                    s.classList.add('selected');
+                } else {
+                    s.classList.remove('selected');
+                }
+            });
+        });
+    });
+</script>
+
+    
+    <%-include("../partials/userfooter.ejs")-%>
+    <%-include("../layout/userfooter.ejs")-%>

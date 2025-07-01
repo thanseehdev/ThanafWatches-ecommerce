@@ -1,0 +1,446 @@
+<%-include("../layout/userHeader.ejs")-%>
+<script src="/javascript/wishlistAjax.js"></script>
+<%-include("../layout/userCentre.ejs")-%>
+<%-include("../partials/userNavbar.ejs")-%>
+
+<style>
+    body{
+      background-color: white;
+    }
+   
+    .accordion-button{
+      background-color: white !important;
+    }
+    .accordion{
+      border-radius: 0px;
+    }
+    #accordionPanelsStayOpenExample{
+      border-radius: 0px;
+    }
+   
+    #imgV{
+      background-color: lightgrey;
+    }
+    .card-img-top {
+  transition: transform 0.3s ease-in-out;
+}
+
+
+  </style>
+  <style>
+     #heartI {
+    position: absolute; /* Position the heart icon absolutely within its container */
+    top: 10px; /* Adjust the top position as needed */
+    right: 10px; /* Adjust the right position as needed */
+    border-radius: 2px;
+    border: 1px solid rgb(238, 232, 232);
+    height: 30px;
+    border: none;
+    width: 30px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    margin-right: 0px;
+    margin-top: -10px;
+    justify-content: center;
+    font-size: medium;
+    font-weight: bolder;
+    background-color: rgb(241, 127, 146);
+    color: white;
+    transition: all 0.3s ease; /* Add a smooth transition for better user experience */
+  }
+  #offer{
+    position: absolute; /* Position the heart icon absolutely within its container */
+    top: 20px; /* Adjust the top position as needed */
+    left: 0px; /* Adjust the right position as needed */
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+    border: 1px solid rgb(238, 232, 232);
+    height: 30px;
+    border: none;
+    width: 40px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    margin-right: 0px;
+    margin-top: -10px;
+    justify-content: center;
+    font-size: xx-small;
+    font-weight: bolder;
+    background-color: red;
+    color: white;
+    transition: all 0.3s ease; /* Add a smooth transition for better user experience */
+  }
+
+  #heartF {
+    position: absolute; /* Position the heart icon absolutely within its container */
+    top: 10px; /* Adjust the top position as needed */
+    right: 10px; /* Adjust the right position as needed */
+    border-radius: 2px;
+    border: 1px solid rgb(238, 232, 232);
+    height: 30px;
+    border: none;
+    width: 30px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    margin-right: 0px;
+    margin-top: -10px;
+    justify-content: center;
+    font-size: medium;
+    font-weight: bolder;
+    background-color: grey;
+    color: white;
+    transition: all 0.3s ease; /* Add a smooth transition for better user experience */
+  }
+    #heartF:hover {
+    background-color: lightblue; /* Change background color on hover */
+  }
+  
+    @media (max-width: 576px) {
+      #heartI {
+        height: 20px;
+        width: 20px;
+      }
+    }
+    /* Make the sidebar fixed when scrolling down */
+#sidebarContainer {
+  position: sticky;
+  top: 20px; /* Adjust this value as needed */
+}
+
+  </style>
+  
+  <!-- sidebar + content -->
+  <br>
+  <section >
+    <!-- <div class="container p-2"> -->
+      <div class="row">
+        <!-- sidebar -->
+        <div class="col-lg-3 mt-5 mb-5" style="max-width: 300px;">
+          <div id="sidebarContainer">
+          <!-- Toggle button -->
+          <form action="\filter" method="post" id="filterForm">
+            <button class="btn btn-outline-secondary mb-3 w-100 d-lg-none" type="button" data-mdb-toggle="collapse" data-mdb-target="#navbarSupportedContentt" aria-controls="navbarSupportedContentt" aria-expanded="false" aria-label="Toggle navigation">
+              <span>Show filter</span>
+            </button>
+          <!-- Collapsible wrapper -->
+          <div class="collapse d-lg-block mb-5" style="background-color: white;border-radius: 0px;box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);" id="navbarSupportedContentt">
+            <div class="accordion" id="accordionPanelsStayOpenExample">
+              <div class="accordion-item " style="border-radius: 0px;">
+                <h2 class="accordion-header mt-2" id="headingTwo">
+                  <button
+                          class="accordion-button text-dark bg-light"
+                          type="button"
+                          data-mdb-toggle="collapse"
+                          data-mdb-target="#panelsStayOpen-collapseTwo"
+                          aria-expanded="true"
+                          aria-controls="panelsStayOpen-collapseTwo"
+                          >
+                   Categories
+                  </button>
+                </h2>
+                <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse show mb-1 mt-1" aria-labelledby="headingTwo">
+                  <div class="accordion-body">
+                    <div>
+                      <!-- Checked checkbox -->
+                      <% categoryy.forEach(ele=> { %>
+                        <% if (ele._id.status=="show") { %>
+                      
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" name="category" value="<%-ele._id.id-%>" id="flexCheckChecked1" />
+                          <label class="form-check-label" for="flexCheckChecked1"><%-ele._id.categoryname-%></label>
+            
+                        </div>
+                        <% } %>
+                        <% }) %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="headingTwo">
+                  <button
+                          class="accordion-button text-dark bg-light"
+                          type="button"
+                          data-mdb-toggle="collapse"
+                          data-mdb-target="#panelsStayOpen-collapseTwo"
+                          aria-expanded="true"
+                          aria-controls="panelsStayOpen-collapseTwo"
+                          >
+                    Brands
+                  </button>
+                </h2>
+                <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse show mb-1 mt-1" aria-labelledby="headingTwo">
+                  <div class="accordion-body">
+                    <div>
+                      <!-- Checked checkbox -->
+                      <% brand.forEach(ele=> { %>
+                        <% if (ele._id.status=="show") { %>
+                      
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" name="brandd" value="<%-ele._id.id-%>" id="flexCheckChecked1" />
+                          <label class="form-check-label" for="flexCheckChecked1"><%-ele._id.brandname-%></label>
+                          <span class="badge badge-secondary float-end"><%-ele.count-%></span>
+                        </div>
+                        <% } %>
+                        <% }) %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- 2nd one -------------------------------- -->
+
+              
+              <div class="accordion-item" style="border-radius: 0px;">
+                <h2 class="accordion-header" style="background-color: white;" id="headingThree">
+                  <button
+                          class="accordion-button text-dark bg-light"
+                          type="button"
+                          data-mdb-toggle="collapse"
+                          data-mdb-target="#panelsStayOpen-collapseThree"
+                          aria-expanded="false"
+                          aria-controls="panelsStayOpen-collapseThree"
+                          >
+                    Price
+                  </button>
+                </h2>
+                <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse show mb-5 mt-3" style="background-color: white;" aria-labelledby="headingThree">
+                  <div class="accordion-body">
+                    <div class="range">
+                      <input type="range" class="form-range" id="priceRange" 
+                          min="0" max="100000" oninput="updateMaxPrice()" />
+                  </div>
+                    <div class="row mb-3">
+                     
+                      <div class="col-6">
+                        
+                        <p class="mb-0">
+                          Min
+                        </p>
+                        <div class="form-outline">
+                          <input type="number" id="minPrice"  name="min" class="form-control" value="0" readonly />
+                          <label class="form-label" for="typeNumber">₹ 0</label>
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <p class="mb-0">
+                          Max
+                        </p>
+                        <div class="form-outline">
+                          <input type="number" id="maxPrice" name="max" value="100000" class="form-control" readonly/>
+                          <label class="form-label" for="typeNumber" >₹ 100000</label>
+                        </div>
+                      </div>
+                    </div>
+                    <button type="submit"  class="btn btn-white w-100 border border-secondary" onclick="filter(event)">apply</button>
+                    <!-- form end ---------------------------------------------------------------------- -->
+                  </form>
+                  </div>
+                  </div>
+                </div>
+              </div>
+             
+              
+            </div>
+          </div>
+        </div>
+        <!-- sidebar -->
+        <!-- content -->
+        <div class="col-lg-9">
+          <header class="d-sm-flex align-items-center border-bottom mb-4 pb-3">
+            <br>
+            <strong class="d-block py-2" style="font-size: small;color: grey;"><br><span id="count" style="font-size: small;color: grey;"><%-count-%></span> Items found </strong>
+            <div class="ms-auto">
+           
+              <!-- <div class="btn-group shadow-0 border">
+                <a href="#" class="btn btn-light" title="List view">
+                  <i class="bi bi-layout-text-sidebar-reverse fa-lg"></i>
+                </a>
+                <a href="#" class="btn btn-light active" title="Grid view">
+                  <i class="bi bi-flower2 fa-lg"></i>
+                </a>
+              </div>     -->
+            </div>
+          </header>
+       
+          <div class="container mt-3 mb-5">
+            <div class="row">
+             
+              <% product.forEach(el => { %>
+              <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="card mb-3">
+                  <%if(el.inCategoryOffer===true){ %>
+                    <span id="offer"><%= Math.floor(((el.oldPrice-el.price)/el.oldPrice)*100) %>% OFF</span>
+                    <%}%>
+                <% if (pro.length>0 && pro.includes(el._id+'')) { %>
+                    <a onclick="addTowishlist('<%-el._id-%>')" ><i id="heartI" class="bi bi-heart"></i></a>
+                   <% }else{ %>
+                      <a onclick="addTowishlist('<%-el._id-%>')" ><i id="heartF" class="bi bi-heart"></i></a>
+                   <%}%>
+                  <a href="/uniqueproduct/<%-el._id-%>">
+                  <img src="/productimages/<%- el.images[0] %>" class="card-img-top" alt="...">
+                  </a>
+                  <div class="card-body">
+                    <h7 style="font-family: cursive;" class="mb-1 me-1"><b>₹<%=el.price-el.discountAmount-%>\-</b></h7>
+                       
+                    <span class="text-danger" style="font-family: cursive;"><s><small>₹ <%=el.price-%></small></s></span><br>
+                    <h6 class="card-title" style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;"><%= el.productName %></h6>
+                    <!-- Other content like product description, price, etc. can go here -->
+                    <% if (el.stockQuantity<=0) { %>
+                      <a href="#!" class="btn  shadow-0 me-1 disabled" style="background-color: red !important; color: white" onclick="addTocart('<%-el._id-%>')"><small>Out of Stock</small></a>
+                      
+                    <% }else{ %>
+                      <a href="#!" class="btn shadow-0 me-1 btnn " style="background-color: green;  color: white;" onclick="addTocart('<%-el._id-%>')"><small>Add to cart</small></a>
+                      
+                      <%}%>
+                  </div>
+                </div>
+              </div>
+              <% }) %>
+            </div>
+          </div>
+  
+          <% if (flag==0) { %>
+            <nav aria-label="Page navigation example" class="d-flex justify-content-center mt-3">
+              <ul class="pagination">
+                <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
+                  <a class="page-link" href="?page=<%= currentPage - 1 %>" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                  </a>
+                </li>
+            
+                <% for (let i = 1; i <= totalpages; i++) { %>
+                  <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                    <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                  </li>
+                <% } %>
+            
+                <li class="page-item <%= currentPage === totalpages ? 'disabled' : '' %>">
+                  <a class="page-link" href="?page=<%= currentPage + 1 %>" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
+            <%} else { %>
+              <nav aria-label="Page navigation example" class="d-flex justify-content-center mt-3">
+                <ul class="pagination">
+                  <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
+                    <a class="page-link" href="?page=<%= currentPage - 1 %><%= existingQueryString %>" aria-label="Previous">
+                      <span aria-hidden="true">&laquo;</span>
+                    </a>
+                  </li>
+                
+                  <% for (let i = 1; i <= totalpages; i++) { %>
+                    <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                      <a class="page-link" href="?page=<%= i %><%= existingQueryString %>"><%= i %></a>
+                    </li>
+                  <% } %>
+                
+                  <li class="page-item <%= currentPage === totalpages ? 'disabled' : '' %>">
+                    <a class="page-link" href="?page=<%= currentPage + 1 %><%= existingQueryString %>" aria-label="Next">
+                      <span aria-hidden="true">&raquo;</span>
+                    </a>
+                  </li>
+                </ul>
+              </nav>
+              <% } %>
+            
+          
+          <!-- Pagination -->
+        </div>
+      </div>
+    <!-- </div>             -->
+  </section>
+  <!-- sidebar + content -->
+  <style>
+    .pagination {
+        display: flex;
+        justify-content: center;
+        margin: 20px 0;
+    }
+
+    .pagination a {
+        margin: 0 5px;
+        text-decoration: none;
+        color: black;
+        background-color: white; /* Primary button color */
+        padding: 10px 15px;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+    }
+
+    .pagination a:hover {
+        background-color: #0056b3;
+        color:white /* Darker shade for hover effect */
+    }
+
+    .pagination a.active {
+        font-weight: bold;
+        background-color: #28a745; /* Active button color */
+        text-decoration: none;
+    }
+</style>
+  
+
+  <script>
+    function updateMaxPrice() {
+      const priceRange = document.getElementById('priceRange');
+      const maxPriceInput = document.getElementById('maxPrice');
+    
+      maxPriceInput.value = priceRange.value;
+      updateLabel(maxPriceInput);
+    }
+    
+    function updateLabel(input) {
+      const label = document.querySelector(`[for="${input.id}"]`);
+      label.textContent = `₹ ${input.value}`;
+    }
+
+    function filter(event) {
+      event.preventDefault(); // Prevent the default form submission behavior
+
+      // Get the values from the form inputs
+      var categoryCheckboxes = document.querySelectorAll('input[name="category"]:checked');
+      var brandCheckboxes = document.querySelectorAll('input[name="brandd"]:checked');
+
+      var minPrice = document.getElementById('minPrice').value;
+      var maxPrice = document.getElementById('maxPrice').value;
+      // Construct the query string
+       
+      var queryString = '';
+
+      // Add selected categories to the query string
+      categoryCheckboxes.forEach(function(checkbox) {
+          queryString += 'category=' + checkbox.value + '&';
+       });
+       brandCheckboxes.forEach(function(checkbox) {
+          queryString += 'brandd=' + checkbox.value + '&';
+       });
+      queryString += 'min=' + minPrice + '&max=' + maxPrice;
+      // Update the form action with the new query string
+      document.getElementById('filterForm').action = '/filter?'+ queryString;
+      // Submit the form
+      document.getElementById('filterForm').submit();
+    }
+    
+    </script>
+
+<script>
+  // JavaScript code for handling collapse behavior
+  document.addEventListener("DOMContentLoaded", function() {
+    const toggleButton = document.querySelector('[data-mdb-toggle="collapse"]');
+    const targetCollapse = document.querySelector(toggleButton.getAttribute("data-mdb-target"));
+
+    toggleButton.addEventListener("click", function() {
+      targetCollapse.classList.toggle("show");
+    });
+  });
+</script>
+
+    
+  <%-include("../partials/userFooter.ejs")-%>
+<%-include("../layout/userFooter.ejs")-%>

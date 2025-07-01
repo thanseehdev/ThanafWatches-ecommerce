@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/styles/custom.css"> <!-- You can link your custom CSS file here if you have any -->
+
+    <!-- jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>
+</head>
+<style>
+    body {
+    font-family: 'Lato', sans-serif;
+}
+#bHover:hover{
+    background-color: rgb(11, 11, 144) !important;
+}
+h1 {
+    margin-bottom: 40px;
+}
+
+label {
+    color: #333;
+}
+
+.btn-send {
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    width: 80%;
+    margin-left: 3px;
+    }
+.help-block.with-errors {
+    color: #ff5050;
+    margin-top: 5px;
+
+}
+
+.card{
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
+</style>
+<body>
+    <div class="container">
+        <div class="text-center mt-5">
+            <h1>Return Request Form</h1>
+        </div>
+    
+        <div class="row">
+            <div class="col-lg-7 mx-auto">
+                <div class="card mt-2 mx-auto p-4 bg-light">
+                    <div class="card-body bg-light">
+                        <form id="returnForm">
+                            <div class="controls">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="form_name">Name</label>
+                                            <input id="form_name" type="text" name="name" class="form-control" placeholder="Please enter your name *" required="required" data-error="Firstname is required.">
+                                            
+                                            <input type="hidden" name="index" value="<%= index %>">
+                                            <input type="hidden" name="orderId" value="<%= orderId %>">
+                                            <input type="hidden" name="dataId" value="<%= dataId %>">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="form_need">Please specify your need *</label>
+                                            <select id="form_need" name="need" class="form-control" required="required" data-error="Please specify your need.">
+                                                <option value="" selected disabled>-Select Your Issue-</option>
+                                                <option>Received wrong item</option>
+                                                <option>Item damaged upon arrival</option>
+                                                <option>Not satisfied with the product</option>
+                                                <option>Other</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="form_message">Reason:</label>
+                                            <textarea id="form_message" name="message" class="form-control" placeholder="Write your reason here." rows="4" required="required" data-error="Please, leave us a message."></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <input type="submit" class="btn btn-success btn-send pt-2 btn-block" value="Submit">
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <button  id="bHover" style="margin-top: 40px;margin-left: 270px;background-color: rgb(62, 62, 231);color: white;border: none;height: 30px;width:100px;border-radius: 4px;">Go Back</button>
+            </div>
+            
+        </div>
+    </div>
+    <script>
+        document.getElementById('bHover').addEventListener('click', function() {
+            window.location.href = '/userorder';
+        });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        $(document).ready(function() {
+            $('#returnForm').on('submit', function(e) {
+                e.preventDefault();
+                $.ajax({
+                    url: '/return',
+                    method: 'POST',
+                    data: $(this).serialize(), // Ensure form data is sent
+                    success: function(response) {
+                        if (response.msg === 'Return Reason Already Submitted') {
+                            Swal.fire({
+                                text: response.msg,
+                                icon: 'error',
+                            });
+                        } else {
+                            Swal.fire({
+                                text: response.msg,
+                                icon: 'success',
+                                timer: 1500,
+                                showConfirmButton: false
+                            });
+                        }1
+                            setTimeout(function() {
+                                window.location.href = '/userorder'; 
+                            }, 1500); // Ensure timing matches Swal timer
+                       
+                    },
+                    error: function(err) {
+                        Toastify({
+                            text: "Something went wrong",
+                            duration: 2000,
+                            gravity: "top",
+                            position: "center",
+                            backgroundColor: "red",
+                            stopOnFocus: true,
+                        }).showToast();
+                        console.log(err);
+                    }
+                });
+            });
+        });
+    </script>
+    
+    
+    
+</body>
+</html>

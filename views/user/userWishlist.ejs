@@ -1,0 +1,54 @@
+<%-include("../layout/userHeader.ejs")-%>
+<script src="/javascript/wishlistAjax.js"></script>
+<%-include("../layout/userCentre.ejs")-%>
+<%-include("../partials/userNavbar.ejs")-%>
+
+
+
+
+<div class="container">
+    
+    
+        <div class="container-fluid" style="padding-top: 30px;">
+        <div class="row justify-content-center mt-5">
+           
+            <div class="col-md-8" style="height: 600px !important">
+                <div class="card border shadow" style="max-height: 600px; overflow-y: auto;">
+                    <div class="m-4" >
+                        <h4 class="card-title mb-4">Your Wishlist</h4>
+                        <hr>
+                        <% wishData.forEach((data) => { %>
+                            <div class="row mb-4">
+                                <div class="col-lg-5 col-sm-4">
+                                    <div class="d-flex align-items-center">
+                                        <img src="/productimages/<%=data.productid.images[0] %>" alt="<%= data.productid.ProductName %>" class="border rounded me-3" style="width: 100px; height: 96px;" />
+                                        <a href="#" class="nav-link" style="text-decoration: none; color: #000000; font-weight: 500;">
+                                            <%= data.productid.ProductName %>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2 col-sm-4" style="margin-top: 40px;">
+                                    <div class="text-primary"><b>₹ <%= data.productid.price %></b></div>
+                                </div>
+                                <div class="col-lg-5 col-sm-4 d-flex align-items-center">
+                                    <% if (data.productid.stockQuantity === 0) { %>
+                                        <button class="btn text-danger icon-hover-danger" style="width: 120px; height: 40px; border:none;">Out Of Stock</button>
+                                    <% } else { %>
+                                    <button class="btn btn-light border text-danger icon-hover-danger me-2" style="width: 120px; height: 40px; border-radius: 5px;color:green !important" onclick="addTocart('<%= data.productid._id %>')">Add To Cart</button>
+                                    <% } %>
+                                    <button class="btn btn-light border text-danger icon-hover-danger" style="width: 120px; height: 40px; border-radius: 5px;" onclick="RemoveFromWishlist('<%= data.productid._id %>')">Remove</button>
+                                </div>
+                            </div>
+                            <hr>
+                        <% }); %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+
+<%-include("../partials/userFooter.ejs")-%>
+<%-include("../layout/userFooter.ejs")-%>

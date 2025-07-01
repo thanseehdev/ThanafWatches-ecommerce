@@ -1,0 +1,66 @@
+<%-include("../layout/adminHeader.ejs")-%>
+<%-include("../layout/adminCentre.ejs")-%>
+<%-include("../partials/adminNavbar.ejs")-%>
+<style>
+#popup {
+    display: none;
+    align-items: start;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    border-radius: 5px;
+    background-color: green;
+    border:none;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+}
+</style>
+<div class="container" style="justify-content: center;margin-top: 150px;width: 550px;" >
+    <% if (successMessage) { %>
+        <div class="alert alert-success" role="alert" id="successMessage">
+            <%= successMessage %>
+        </div>
+    
+        <script>
+            setTimeout(function() {
+                document.getElementById('successMessage').style.display = 'none';
+            }, 3000);
+        </script>
+    <% } %>
+    <% if (errorMessage) { %>
+        <div class="alert alert-danger" role="alert" id="successMessage">
+            <%= errorMessage %>
+        </div>
+    
+        <script>
+
+            setTimeout(function() {
+                document.getElementById('successMessage').style.display = 'none';
+            }, 3000);
+        </script>
+    <% } %>
+    <section class="card" style="height: 230px;">
+        <form action="/admin/addcategory" method="post">
+            <div class="card-header bg-dark text-white text-center">
+                <h4>Add Category</h4>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="categoryName" class="form-label">Enter Category</label>
+                    <input type="text" class="form-control" id="categoryName" name="categoryname" required>
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-success">Add Category</button>
+                </div>
+            </div>
+        </form>
+    </section>
+</div>
+<script>
+    
+    </script>
+
+
+<%-include("../layout/adminFooter.ejs")-%>

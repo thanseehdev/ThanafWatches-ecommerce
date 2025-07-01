@@ -1,0 +1,372 @@
+<%-include("../layout/userHeader.ejs")-%>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="/javascript/createRazor.js"></script>
+<%-include("../layout/userCentre.ejs")-%>
+
+<%-include("../partials/userNavbar.ejs")-%>
+<style>
+#loading-spinner {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+}
+
+.spinner {
+    border: 16px solid #f3f3f3; /* Light grey */
+    border-top: 16px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 2s linear infinite;
+}
+
+/* Spin animation */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+</style>
+
+<!-- cart + summary -->
+<div class="container-fluid mt-5 pt-5 mb-5">
+    <div class="container mb-5">
+
+        <div class="row">
+            <div class="col-lg-9 mb-5">
+                <div class="card mb-5">
+                    <div class="card-header d-flex justify-content-between align-items-center bg-dark text-white">
+                        <h4 class="card-title mb-0">Delivery Address</h4>
+                        <a class="btn btn-primary" href="/addAddressPO">Add Address</a>
+                    </div>
+                    <% if (address != null && address.length > 0) { %>
+                        <div class="card-body">
+                            <div class="form-check mb-3">
+                                <% if (adrsSelect == null || adrsSelect == undefined) { %>
+                                    <input class="form-check-input" type="radio" name="existingAddress" id="address0" onclick="showButton('deliverHereBtn0')">
+                                <% } else { %>
+                                    <input class="form-check-input" type="radio" name="existingAddress" id="address0" onclick="showButton('deliverHereBtn0')" <%= adrsSelect != address[0]._id ? 'disabled' : '' %>>
+                                <% } %>
+                                <ul class="address-list list-unstyled mb-0">
+                                    <li>
+                                        <button type="button" class="badge bg-dark text-white"><%= address[0].addressType %></button>
+                                        <div class="float-end">
+                                            <% if (adrsSelect == address[0]._id) { %>
+                                                <i class="bi bi-check-circle-fill text-success fs-4"></i>
+                                            <% } %>
+                                        </div>
+                                        <p class="fw-bold mb-1"><%-address[0].name-%></p>
+                                        <p class="mb-1"><%= address[0].address %>, <%= address[0].locality %>, <%= address[0].city %>, <%= address[0].district %>, <%= address[0].state %></p>
+                                        <p class="mb-1"><%-address[0].mobile-%></p>
+                                        <p class="mb-3"><%-address[0].pincode-%></p>
+                                        <button type="button" class="btn btn-success d-none" id="deliverHereBtn0" onclick="selectAddress('<%-address[0]._id-%>')">Deliver Here</button>
+                                    </li>
+                                </ul>
+                            </div>
+                            <% address.forEach(function(data, i) { %>
+                                <% if (i != 0) { %>
+                                    <div class="form-check mb-3">
+                                        <% if (adrsSelect == null || adrsSelect == undefined) { %>
+                                            <input class="form-check-input" type="radio" name="existingAddress" id=<%= "address" + i %> onclick="showButton('<%= "deliverHereBtn" + i %>')">
+                                        <% } else { %>
+                                            <input class="form-check-input" type="radio" name="existingAddress" id=<%= "address" + i %> onclick="showButton('<%= "deliverHereBtn" + i %>')" <%= adrsSelect != data._id ? 'disabled' : '' %>>
+                                        <% } %>
+                                        <ul class="address-list list-unstyled mb-0">
+                                            <li>
+                                                <button type="button" class="badge bg-dark text-white"><%= data.addressType %></button>
+                                                <div class="float-end">
+                                                    <% if (adrsSelect == data._id) { %>
+                                                        <i class="bi bi-check-circle-fill text-success fs-4"></i>
+                                                    <% } %>
+                                                </div>
+                                                <p class="fw-bold mb-1"><%= data.name %></p>
+                                                <p class="mb-1"><%= data.address %>, <%= data.locality %>, <%= data.city %>, <%= data.district %>, <%= data.state %></p>
+                                                <p class="mb-1"><%= data.mobile %></p>
+                                                <p class="mb-3"><%= data.pincode %></p>
+                                                <button type="button" class="btn btn-success d-none" id=<%="deliverHereBtn"+i%> onclick="selectAddress('<%-data._id-%>')">Deliver Here</button>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                <% } %>
+                            <% }); %>
+                            <% if (address.length > 1) { %>
+                                <div class="text-end">
+                                    <a href="#" class="btn btn-link p-0" onclick="toggleHiddenAddresses()">Show All</a>
+                                </div>
+                            <% } %>
+                        </div>
+                    <% } %>
+                </div>
+
+                <div class="card">
+                    <div class="card-header bg-dark text-white">
+                        <h4 class="card-title mb-0">Payment Options</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label class="card-radio-label d-block ">
+                                    <input type="radio" name="pay-method" id="pay-methodoption1" value="walletPayment" class="card-radio-input">
+                                    <div class="card-radio p-3 border rounded">
+                                        <i class="bi bi-credit-card d-block h2 mb-2"></i>
+                                        Wallet
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="card-radio-label d-block ">
+                                    <input type="radio" name="pay-method" id="pay-methodoption2" value="OnlinePayment" class="card-radio-input">
+                                    <div class="card-radio p-3 border rounded">
+                                        <img src="/assets/razorpay.png" alt="Razorpay" class="img-fluid" style="max-height: 71px;">
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="card-radio-label d-block ">
+                                    <input type="radio" name="pay-method" id="pay-methodoption3" value="cashOnDelivery" class="card-radio-input" checked>
+                                    <div class="card-radio p-3 border rounded">
+                                        <i class="bi bi-cash-stack d-block h2 mb-2"></i>
+                                        Cash on Delivery
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mt-4">
+                    <a href="/" class="btn btn-link"><i class="bi bi-arrow-left me-1"></i> Continue Shopping</a>
+                    <button id="proceedButton"  type="submit" class="btn btn-success">Proceed</button>
+                </div>
+            </div>
+
+            <div class="col-lg-3 mb-5">
+                <div class="container mb-5">
+                <div class="card position-sticky top-0">
+                    <div class="card-body">
+                        <h6>HAVE A COUPON?</h6>
+                        <% if (coupons.length > 0) { %>
+                            <form id="applyCouponForm">
+                                <div class="input-group mb-3">
+                                    <select class="form-select" id="category" name="couponCode" required>
+                                        <option value="select a coupon">Select available coupon</option>
+                                        <% coupons.forEach((ele) => { %>
+                                            <% if (totalprice > ele.minimumPurchaseAmount) { %>
+                                                <option value="<%= ele.couponCode %>"><%= ele.couponCode %> - ₹<%= ele.discountAmount %> OFF</option>
+                                            <% } %>
+                                        <% }) %>
+                                    </select>
+                                    <button id="Cbutton" type="submit" class="btn btn-success">Apply</button>
+                                </div>
+                            </form>
+                        <% } else { %>
+                            <p class="text-danger">No coupon available for your order.</p>
+                        <% } %>
+
+                        <hr>
+                        <h5>PRICE DETAILS</h5>
+                        <hr>
+                        <div class="d-flex justify-content-between">
+                            <p>Total price:</p>
+                            <p>₹<%= grandtotal %></p>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <p>Discount:</p>
+                            <p class="text-success">-₹<%= disctotal %></p>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <p>Coupon Discount:</p>
+                            <p class="text-success">-₹<%= couponD %></p>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <p>Delivery charges:</p>
+                            <p><span class="text-success">Free</span><del class="text-muted">₹40</del></p>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between fw-bold">
+                            <p>TOTAL PAYABLE</p>
+                            <p>₹<%= totalprice %></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+
+
+<div id="loading-spinner" style="display: none;">
+    <div class="spinner"></div>
+</div>
+
+</div>
+</div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+    document.getElementById('applyCouponForm').addEventListener('submit', async function(event) {
+        event.preventDefault();
+        const couponCode = document.getElementById('category').value;
+
+        try {
+            const response = await fetch('/apply-coupon', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ couponCode: couponCode })
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                Swal.fire('Success', 'Coupon applied successfully', 'success').then(() => {
+                    window.location.href = '/placeorder';
+                });
+            } else {
+                Swal.fire('Error', result.message, 'error');
+            }
+        } catch (error) {
+            Swal.fire('Error', 'An error occurred while applying the coupon', 'error');
+        }
+    });
+</script>
+
+
+<script>
+    function toggleHiddenAddresses() {
+        var hiddenAddresses = document.querySelectorAll('.hidden-address');
+        hiddenAddresses.forEach(function(address) {
+            address.classList.toggle('show-hidden-addresses');
+        });
+
+        var showAllLink = document.querySelector('.show-all-addresses');
+        if (showAllLink) {
+            if (showAllLink.textContent === 'Show All') {
+                showAllLink.textContent = 'Show Less';
+            } else {
+                showAllLink.textContent = 'Show All';
+            }
+        }
+    }
+</script>
+<% if (typeof successMessage !== 'undefined' && successMessage !== null) { %>
+    <script>
+        Toastify({
+            text: "<%= successMessage %>",
+            duration: 3000, // 3 seconds
+            backgroundColor: "green",
+            position: "center", // Adjust position as needed
+        }).showToast();
+    </script>
+<% } %>
+<% if (typeof errorMessage !== 'undefined' && errorMessage !== null) { %>
+    <script>
+        Toastify({
+            text: "<%= errorMessage %>",
+            duration: 3000, // 3 seconds
+            backgroundColor: "red",
+            position: "center", // Adjust position as needed
+        }).showToast();
+    </script>
+<% } %>
+<script>
+    function showButton(buttonId) {
+        var buttons = document.querySelectorAll('.btn-deliv'); // Get all "Deliver Here" buttons
+        buttons.forEach(function(button) {
+            button.classList.add('d-none'); // Hide all buttons
+        });
+        var button = document.getElementById(buttonId);
+        if (button) {
+            button.classList.remove('d-none'); // Show the clicked button
+        }
+    }
+</script>
+
+<script>
+    document.getElementById('proceedButton').addEventListener('click', function(event) {
+        // Prevent default action of the anchor tag (preventing navigation)
+        event.preventDefault();
+
+        // Get the selected payment method
+        var paymentMethod = '';
+        var paymentMethodInputs = document.getElementsByName('pay-method');
+        for (var i = 0; i < paymentMethodInputs.length; i++) {
+            if (paymentMethodInputs[i].checked) {
+                paymentMethod = paymentMethodInputs[i].value;
+                break; // Stop looping once we find the checked radio input
+            }
+        }
+
+        if (paymentMethod === '') {
+            // Display a Toast message to the user
+            Toastify({
+                text: "Please select a payment method.",
+                duration: 3000, // Duration in milliseconds
+                close: true, // Whether to show the close button
+                gravity: "top", // toast position: 'top', 'bottom', 'center'
+                position: "center", // toast position: 'left', 'center', 'right'
+                backgroundColor: "linear-gradient(to right, #ff416c, #ff4b2b)",
+            }).showToast();
+            return;
+        }
+        
+        // Update the form action with the selected payment method
+        var form = document.getElementById('placeOrderForm');
+        form.action = '/placeorder/' + encodeURIComponent(paymentMethod);
+
+        // Submit the form
+        form.submit();
+    });
+</script>
+
+<script>
+    $(document).ready(function() {
+        $("#proceedButton").click(function() {
+            
+            var paymentMethod = $('input[name="pay-method"]:checked').val();
+            var price = "<%=totalprice%>";
+            var url = `/placeorder/${paymentMethod}`
+           if(price< 1000 && paymentMethod == "cashOnDelivery"){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: `Order above Rs 1000 can't allowed for Cash On Delivery`
+                });
+           }
+           else{
+            $.ajax({
+    type: "POST",
+    url: url,
+    contentType: "application/json; charset=utf-8",
+    success: function(response) {
+        if (response.paymentMethod === "COD" || response.paymentMethod === "wallet") {
+            // Show loading spinner
+            document.getElementById('loading-spinner').style.display = 'block';
+            
+            setTimeout(function() {
+                // Hide loading spinner
+                document.getElementById('loading-spinner').style.display = 'none';
+                window.location.href = "/ordersuccess";
+            }, 2000); // 2000 milliseconds = 2 seconds
+        } else if (response.paymentMethod == "onlinePayment") {
+            console.log("Hlo I am here iiiii----->");
+            createRazorpay(response.order);
+        }
+    },
+    error: function(xhr, status, error) {
+        // Handle any errors that occur during the request
+        console.error('Request failed. Status: ' + status + ', Error: ' + error);
+    }
+});
+
+
+
+           }  
+        });
+    });
+</script>
+<%-include("../partials/userFooter.ejs")-%>
+<%-include("../layout/userFooter.ejs")-%>

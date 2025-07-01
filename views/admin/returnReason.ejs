@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/styles/custom.css"> <!-- You can link your custom CSS file here if you have any -->
+
+    <!-- jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>
+</head>
+<style>
+    
+
+    body {
+        background: #eee;
+    }
+
+    #bHover:hover {
+        background-color: rgb(11, 11, 144) !important;
+    }
+
+    #BHover:hover {
+        background-color: rgb(10, 10, 10) !important;
+    }
+</style>
+
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-md-5">
+                <div class="card p-3">
+                    <i class="fa fa-apple"></i>
+                    <div class="about-product text-center mt-2">
+                        <img src="https://i.imgur.com/3VTaSeb.png" class="img-fluid" alt="Product Image" width="300">
+                        <div>
+                            <h6 class="mt-0 text-black-50"></h6>
+                        </div>
+                    </div>
+                    <div class="stats mt-2">
+                        <h6 class="mt-0 text-black-50">Reason:</h6>
+                        <div class="p-price" style="font-size: xx-large;">
+                            <%= returnReason.reason %>
+                        </div>
+                    </div>
+                    <div class="mt-5">
+                        <button id="bbHover" class="btn btn-primary btn-lg btn-block">Click Here To Approve</button>
+                    </div>
+                    <div class="mt-4">
+                        <button id="bbbHover" class="btn btn-danger btn-lg btn-block">Click Here To Reject</button>
+                    </div>
+                    <button id="BHover" class="btn btn-secondary btn-lg btn-block mt-5">Go Back</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+    <script>
+        document.getElementById('BHover').addEventListener('click', function () {
+            window.location.href = '/admin/returnA';
+        });
+    </script>
+    <script>
+        document.getElementById('bbHover').addEventListener('click', async function () {
+            try {
+                const response = await fetch('/admin/returnApprove/<%-dataId-%>/<%= orderId %>');
+                const data = await response.json();
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: data.msg,
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '/admin/returnA'; // Redirect to dashboard after success
+                    }
+                });
+            } catch (error) {
+                console.error('Error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'An error occurred. Please try again.',
+                });
+            }
+        });
+    </script>
+
+<script>
+    document.getElementById('bbbHover').addEventListener('click', async function () {
+        try {
+            const response = await fetch('/admin/returnReject/<%-dataId-%>/<%= orderId %>');
+            const data = await response.json();
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: data.msg,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '/admin/returnA'; // Redirect to dashboard after success
+                }
+            });
+        } catch (error) {
+            console.error('Error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'An error occurred. Please try again.',
+            });
+        }
+    });
+</script>
+    
+</body>
+
+</html>

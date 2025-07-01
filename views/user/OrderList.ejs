@@ -1,0 +1,193 @@
+<%-include("../layout/userHeader.ejs")-%>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<%-include("../layout/userCentre.ejs")-%>
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+    }
+    .avatar-lg {
+        height: 5rem;
+        width: 5rem;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+    .text-truncate {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+    .badge {
+        font-weight: 400;
+        padding: 8px 12px;
+        border-radius: 20px;
+    }
+    .bg-warning {
+        background-color: #f39c12;
+        color: #fff;
+    }
+    .bg-primary {
+        background-color: #3498db;
+        color: #fff;
+    }
+    .bg-info {
+        background-color: #5bc0de;
+        color: #fff;
+    }
+    .bg-success {
+        background-color: #2ecc71;
+        color: #fff;
+    }
+    .bg-danger {
+        background-color: #e74c3c;
+        color: #fff;
+    }
+    #black{
+        background-color: black;
+    }
+    .card-header {
+        background-color: #3498db;
+        color: #fff;
+    }
+    .button {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #3498db;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+    }
+    .button:hover {
+        background-color: #2980b9;
+    }
+    .pagination a {
+        margin: 0 10px;
+        text-decoration: none;
+        color: white;
+        background-color: #007bff;
+        padding: 10px 15px;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+    }
+    .pagination a:hover {
+        background-color: #0056b3;
+    }
+    .pagination a.active {
+        font-weight: bold;
+        background-color: #28a745;
+        text-decoration: none;
+    }
+</style>
+
+
+<%- include("../partials/userNavbar.ejs") %>
+
+<br>
+
+<% if (orders.length > 0) { %>
+<div class="card-header text-center" id="black">
+    <h4>Order Details</h4>
+</div>
+<div class="container" style="min-height: 600px;">
+    <table id="ordersTable" class="table table-responsive-md">
+        <tbody>
+            <% orders.forEach(order => { %>
+                <tr>
+                    <th>
+                        <div class="card mb-3">
+                            <div class="card-header d-flex justify-content-between">
+                                <span><%= order.DorderId %></span>
+                                <span class="order-date"><%- order.orderdate.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', dateStyle: 'short', timeStyle: 'short' }) %></span>
+                            </div>
+                            <div class="card-body">
+                                <% order.products.forEach(data => { %>
+                                    <div class="row align-items-center mb-3">
+                                        <div class="col-lg-2">
+                                            <img src="/productimages/<%= data?.productid?.images[0] %>" alt="" class="avatar-lg rounded">
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <h5 class="text-truncate"><a href="#" class="text-dark"><%= data?.productid?.productName %></a></h5>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <span class="text-muted">Qty: <%= data.quantity %></span>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <% if (data.status != "Cancelled") { %>
+                                                <% if (order.orderStatus === 'Order Processed') { %>
+                                                    <span class="badge bg-warning"><%= order.orderStatus %></span>
+                                                <% } else if (order.orderStatus === 'Order Confirmed') { %>
+                                                    <span class="badge bg-primary"><%= order.orderStatus %></span>
+                                                <% } else if (order.orderStatus === 'Order Shipped') { %>
+                                                    <span class="badge bg-info"><%= order.orderStatus %></span>
+                                                <% } else if (order.orderStatus === 'Order Delivered') { %>
+                                                    <span class="badge bg-success"><%= order.orderStatus %></span>
+                                                <% } else if (order.orderStatus === 'Order Rejected'){ %>
+                                                    <span class="badge bg-danger"><%= order.orderStatus %></span>
+                                                <% } else if (order.orderStatus === "Cancelled"){ %>
+                                                    <span class="badge bg-danger"><%= order.orderStatus %></span>
+                                                <% } else if (order.orderStatus === "Returned"){ %>
+                                                    <span class="badge bg-warning"><%= order.orderStatus %></span>
+                                                <% } %>
+                                            <% } else { %>
+                                                <span class="badge bg-danger"><%= data.status %></span>
+                                            <% } %>
+                                            <a href="/myorderdetails/<%= order._id %>" class="button ml-3">View details</a>
+                                        </div>
+                                    </div>
+                                <% }) %>
+                            </div>
+                        </div>
+                    </th>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</div>
+<% } else { %>
+<div class="container-fluid"><br><br></div>
+<div class="container" style="height: 600px;">
+    <div class="row">
+        <div class="col-lg-7 mx-auto">
+            <div class="card mt-2 mx-auto p-4 bg-light">
+                <div class="card-body">
+                    <div class="container">
+                        <form id="contact-form" role="form">
+                            <div class="controls d-flex justify-content-center" style="height:400px;">
+                                <h6 style="margin-top: 140px;font-size: 65px;">no records found!!!</h6>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<% } %>
+
+<div class="pagination" style="display: flex;justify-content:center ;">
+<% if (currentPage > 1) { %>
+    <a href="?page=<%= currentPage - 1 %>">Previous</a>
+<% } %>
+
+<% for (let i = 1; i <= totalPages; i++) { %>
+    <a href="?page=<%= i %>" class="<%= currentPage === i ? 'active' : '' %>"><%= i %></a>
+<% } %>
+
+<% if (currentPage < totalPages) { %>
+    <a href="?page=<%= currentPage + 1 %>">Next</a>
+<% } %>
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+<%-include("../partials/userFooter.ejs")-%>
+<%-include("../layout/userFooter.ejs")-%>

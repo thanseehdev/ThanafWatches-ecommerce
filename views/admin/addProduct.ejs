@@ -1,0 +1,615 @@
+<%-include("../layout/adminHeader.ejs")-%>
+<!-- Include jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css"/>
+<%-include("../layout/adminCentre.ejs")-%>
+<%-include("../partials/adminNavbar.ejs")-%>
+
+<form action="/admin/addProducts" method="post" enctype="multipart/form-data">
+    <div class="container" style="margin-top: 90px;">
+        <div class="row p-3 d-flex justify-content-center align-items-center shadow-lg mt-4" style="height: 80vh;">
+        <div class="col-12 col-md-6" style="border-radius: 15px;">
+            <div class="d-flex justify-content-center align-items-center" style="background-color:grey; border-radius:4px;">
+                <h1 style="color: rgb(255, 255, 255);">Add Product</h1>
+            </div>
+            <div class="d-flex mt-4 justify-content-center align-items-center">
+                <input type="text" name="productName" placeholder="Product Name"
+                    style="width: 80%;height: 35px;border-radius: 5px;padding-left: 5px;" required>
+            </div><br>
+            <div class="d-flex justify-content-center align-items-center">
+                <select class="" id="category" name="Category" required
+                    style="width:38%;height: 35px;border-radius: 5px;margin-right: 4%;">
+                    <option value="" selected disabled>Select a category</option>
+                    <%category?.forEach((x) => {%>
+                        <option value="<%= x._id%>"><%=x?.categoryname%></option>
+                    <%})%>
+                </select>
+            </div>
+            <br>
+            <div class="d-flex justify-content-center align-items-center">
+                <select class="" id="brand" name="Brand" required
+                    style="width:38%;height: 35px;border-radius: 5px;margin-right: 4%;">
+                    <option value="" selected disabled>Select a brand</option>
+                    <%brand?.forEach((x) => {%>
+                        <option value="<%= x._id%>"><%=x?.brandname%></option>
+                    <%})%>
+                </select>
+            </div>
+            <br>
+            <div class="d-flex">
+
+            </div>
+
+            <div class="d-flex justify-content-center">
+                <textarea name="Specification1" placeholder="Specification1"
+                    style="width: 38%;height: 35px;border-radius: 5px;padding-left: 5px;margin-right: 4%;" required></textarea>
+                <textarea name="Specification2" placeholder="Specification2"
+                    style="width: 38%;height: 35px;border-radius: 5px;padding-left: 5px;" required></textarea>
+            </div>
+            <br>
+            <div class="d-flex justify-content-center">
+                <textarea name="Specification3" placeholder="Specification3"
+                    style="width: 38%;height: 35px;border-radius: 5px;padding-left: 5px;margin-right: 4%;" required></textarea>
+                <textarea name="Specification4" placeholder="Specification4"
+                    style="width: 38%;height: 35px;border-radius: 5px;padding-left: 5px;" required></textarea>
+            </div>
+            <input type="hidden" value="false" name="inWish">
+            <br>
+            <div class="d-flex justify-content-center align-items-center">
+                <textarea name="Description" placeholder="Description"
+                    style="width: 80%;height: 35px;border-radius: 5px;padding-left: 5px;" required></textarea>
+            </div>
+            <br>
+            <div class="d-flex justify-content-center align-items-center">
+                <input type="number" name="price" placeholder="Enter the price" id="price"
+                    style="width: 26%;height: 35px;border-radius: 5px;padding-left: 5px;margin-right: 4%;" required>
+                <input type="number" name="discountAmount" placeholder="Discount Amount" id="discountAmount"
+                    style="width: 26%;height: 35px;border-radius: 5px;padding-left: 5px;margin-right: 4%;" required>
+                <input type="number" name="stockQuantity" placeholder="Stock" id="stockquantity"
+                    style="width: 20%;height: 35px;border-radius: 5px;padding-left: 5px;" required>
+            </div>
+            </div>
+            <br>
+
+    
+            <div class="col-12 col-md-6 pt-3  "
+            style="border-radius: 15px;">
+  
+            <div class="d-flex justify-content-center align-items-center">
+               
+                
+                     <input
+                type="file"
+                name="images1"
+                id="images1"
+                accept="image/*"
+                onchange="change(event,1)"
+                style="
+                  width: 38%;
+                  height: 35px;
+                  border-radius: 5px;
+                  padding-left: 5px;
+                  margin-right: 4%;
+                "
+                required
+              />
+              <input
+                type="file"
+                name="images2"
+                id="images2"
+                accept="image/*"
+                onchange="change(event,2)"
+                style="
+                  width: 38%;
+                  height: 35px;
+                  border-radius: 5px;
+                  padding-left: 5px;
+                "
+                required
+              />
+            </div>
+            <br>
+            <div class="d-flex justify-content-center align-items-center">
+                
+                     <input
+                type="file"
+                name="images3"
+                id="images3"
+                accept="image/*"
+                onchange="change(event,3)"
+                style="
+                  width: 38%;
+                  height: 35px;
+                  border-radius: 5px;
+                  padding-left: 5px;
+                  margin-right: 4%;
+                "
+                required
+              />
+              <input
+                type="file"
+                name="images4"
+                id="images4"
+                accept="image/*"
+                onchange="change(event,4)"
+                style="
+                  width: 38%;
+                  height: 35px;
+                  border-radius: 5px;
+                  padding-left: 5px;
+                "
+                required
+              />
+            </div>
+            <div class="d-flex justify-content-center">
+               <div
+                style="
+                  width: 100px;
+                  height: 100px;
+                  margin-right: 4%;
+                  margin-left: 10%;
+                  border: 1px solid grey;
+                "
+              >
+                <img
+                  id="imagePreview1"
+                  src="/assets/TFlogo.png"
+                  alt="Image Preview 1"
+                  style="width: 90px; height: 90px"
+                />
+              </div>
+                <div
+                style="
+                  width: 100px;
+                  height: 100px;
+                  margin-right: 4%;
+                  margin-left: 4%;
+                  border: 1px solid grey;
+                "
+              >
+                <img
+                  id="imagePreview2"
+                  src="/assets/TFlogo.png"
+                  alt="Image Preview 2"
+                  style="width: 90px; height: 90px"
+                />
+              </div>
+                 <div
+                style="
+                  width: 100px;
+                  height: 100px;
+                  margin-right: 4%;
+                  margin-left: 4%;
+                  border: 1px solid grey;
+                "
+              >
+                <img
+                  id="imagePreview3"
+                  src="/assets/TFlogo.png"
+                  alt="Image Preview 3"
+                  style="width: 90px; height: 90px"
+                />
+              </div>
+                <div
+                style="
+                  width: 100px;
+                  height: 100px;
+                  margin-right: 4%;
+                  border: 1px solid grey;
+                "
+              >
+                <img
+                  id="imagePreview4"
+                  src="/assets/TFlogo.png"
+                  alt="Image Preview 4"
+                  style="width: 90px; height: 90px"
+                />
+              </div>
+            </div>
+
+
+
+
+<br>
+            <div class="d-flex justify-content-center align-items-center">
+                <input name="tags" placeholder="Tags"
+                    style="width: 80%;height: 35px;border-radius: 5px;padding-left: 5px;" required></input>
+            </div>
+            <div class="d-flex justify-content-center mt-4">
+                <button type="submit" class="btn" style="background-color: rgb(36, 80, 255);color: white;">Add Product</button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</form>
+
+<div
+      class="modal fade"
+      id="modal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="modalLabel"
+      aria-hidden="true"
+      
+    >
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalLabel">Crop image</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="img-container">
+              <div class="row" >
+                <div class="col-md-8">
+                  <img id="cropperImage" class="img-fluid" />
+                </div>
+                <div class="col-md-4">
+                  <div class="preview"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                Cancel
+            </button>
+            
+            <button type="button" class="btn btn-primary" id="crop">
+              Crop
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+
+<!-- <script>
+    function change(event, index) {
+        var input = event.target;
+        var reader = new FileReader();
+        reader.onload = function () {
+            var img = document.getElementById('imageToCrop');
+            img.src = reader.result;
+
+            // Initialize Cropper
+            var cropper = new Cropper(img, {
+                aspectRatio: 1 / 1, // Set aspect ratio as 1:1, you can change as per your requirement
+                viewMode: 1,
+                guides: true,
+                dragMode: 'move',
+                autoCropArea: 0.8, // 80% of image area is cropped by default
+                movable: true, // Enable image moving
+                zoomable: true, // Enable image zooming
+                crop: function (event) {
+    
+    // Set the cropped image to the preview
+    var preview = document.getElementById('imagePreview' + index);
+    var canvas = cropper.getCroppedCanvas({
+        width: 100,
+        height: 100,
+    });
+    preview.src = canvas.toDataURL('image/jpeg');
+    
+    // Store the cropped image data in hidden input field
+    var croppedImageData = canvas.toDataURL('image/jpeg');
+    document.getElementById('croppedImage' + index).value = croppedImageData;
+},
+            });
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+
+    function validateImage(inputId, index) {
+        var input = document.getElementById(inputId);
+        var imagePreview = document.getElementById('imagePreview' + index);
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                imagePreview.src = e.target.result;
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script> -->
+
+
+<script>
+    $(document).ready(function () {
+    var bs_modal = $("#modal");
+    var croppers = [];
+
+    // Function to handle file change and update preview image
+    function change(event, no) {
+        console.log("File changed, updating preview image...");
+        document.getElementById(`imagePreview${no}`).src = URL.createObjectURL(event.target.files[0]);
+
+        // Show modal only if it's the first time the corresponding input file is changed
+        if (!croppers[no]) {
+            bs_modal.modal("show");
+        }
+    }
+
+    // Event listener for file input change
+    $("input[type=file]").change(function (e) {
+        var fileInput = $(this);
+        var file = e.target.files[0];
+        var reader = new FileReader();
+        var cropperId = fileInput.attr("id").slice(-1);
+
+        reader.onload = function (event) {
+            // Destroy the previous cropper instance if it exists
+            if (croppers[cropperId]) {
+                croppers[cropperId].destroy();
+            }
+            var image = document.getElementById("cropperImage");
+
+            image.onload = function () {
+                var cropper = new Cropper(image, {
+                    // aspectRatio: ,
+                    // viewMode: ,
+                    preview: ".preview",
+                });
+
+                // Unbind the previous click event to prevent multiple bindings
+                $("#crop").off("click").on("click", function () {
+                    var canvas = cropper.getCroppedCanvas({
+                        width: 0,
+                        height:0,
+                    });
+
+                    if (canvas) {
+                        canvas.toBlob(function (blob) {
+                            if (blob) {
+                                console.log("Blob created successfully:", blob);
+                                var imageUrl = URL.createObjectURL(blob);
+                                console.log("Image URL:", imageUrl);
+                                $("#imagePreview" + cropperId).attr("src", imageUrl);
+
+                                // Store cropped image Blob for sending it along with the form data
+                                fileInput.data("croppedImageBlob", blob);
+
+                                bs_modal.modal("hide");
+                            } else {
+                                console.error("Blob is null or invalid.");
+                            }
+                        });
+                    } else {
+                        console.error("Canvas is null or invalid.");
+                        bs_modal.modal("hide");
+                    }
+                });
+
+                croppers[cropperId] = cropper;
+            };
+
+            image.src = event.target.result;
+        };
+
+        reader.readAsDataURL(file);
+
+        // Call change function to update preview image and show modal if necessary
+        change(e, cropperId);
+    });
+
+    // Function to handle closing modal
+    bs_modal.on("hidden.bs.modal", function () {
+        // Destroy all croppers
+        croppers.forEach(function (cropper) {
+            if (cropper) cropper.destroy();
+        });
+        croppers = []; // Reset croppers array
+    });
+
+    // Event listener for form submission
+    $("#productForm").submit(function (e) {
+        e.preventDefault(); // Prevent default form submission
+
+        // Serialize form data
+        var formData = new FormData();
+        var formDataSerialized = $(this).serializeArray();
+        $.each(formDataSerialized, function (index, item) {
+            formData.append(item.name, item.value);
+        });
+
+        // Add cropped image blobs to formData
+        $("input[type=file]").each(function () {
+            var croppedImageBlob = $(this).data("croppedImageBlob");
+            if (croppedImageBlob) {
+                formData.append($(this).attr("name"), croppedImageBlob, `cropped_${$(this).attr("name")}.png`);
+            }
+        });
+
+        console.log(formData, 'this is the data');
+        // Perform AJAX request
+        $.ajax({
+            url: $(this).attr("action"), // Form action URL
+            type: $(this).attr("method"), // Form method (POST)
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                // Handle success response
+                console.log("Success:", response);
+            },
+            error: function (xhr, status, error) {
+                // Handle error
+                console.error("Error:", error);
+            }
+        });
+    });
+});
+
+</script>
+
+
+
+<!-- Include jQuery -->
+
+
+
+<script>
+    // Function to validate product name
+    function validateProductName() {
+        const productNameInput = document.querySelector('input[name="productName"]');
+        const productNameValue = productNameInput.value.trim();
+
+        // Check if the product name is empty or contains only spaces
+        if (productNameValue === ''||!/^[a-zA-Z\s]/.test(productNameValue)) {
+            productNameInput.setCustomValidity('Product name cannot be empty');
+        } else {
+            productNameInput.setCustomValidity('');
+        }
+    }
+
+    // Function to validate description
+    function validateDescription() {
+        const descriptionInput = document.querySelector('textarea[name="Description"]');
+        const descriptionValue = descriptionInput.value.trim();
+
+        // Check if the description is empty or contains only spaces
+        if (descriptionValue === '') {
+            descriptionInput.setCustomValidity('Description cannot be empty');
+        } else {
+            descriptionInput.setCustomValidity('');
+        }
+    }
+
+    // Function to validate specifications
+    function validateSpecifications() {
+        const specInputs = document.querySelectorAll('textarea[name^="Specification"]');
+
+        specInputs.forEach(input => {
+            const specValue = input.value.trim();
+
+            // Check if the specification is empty or contains only spaces
+            if (specValue === '') {
+                input.setCustomValidity('Specification cannot be empty');
+            } else {
+                input.setCustomValidity('');
+            }
+        });
+    }
+
+    // Function to validate tags
+    function validateTags() {
+        const tagsInput = document.querySelector('input[name="tags"]');
+        const tagsValue = tagsInput.value.trim();
+
+        // Check if the tags contain only letters and spaces
+        if (!/^[a-zA-Z\s]/.test(tagsValue)) {
+            tagsInput.setCustomValidity('Tags cannot be empty and cannot contain numbers');
+        } else {
+            tagsInput.setCustomValidity('');
+        }
+    }
+
+    // Add event listeners for input events on relevant fields
+    document.addEventListener('DOMContentLoaded', function () {
+        const productNameInput = document.querySelector('input[name="productName"]');
+        const descriptionInput = document.querySelector('textarea[name="Description"]');
+        const specInputs = document.querySelectorAll('textarea[name^="Specification"]');
+        const tagsInput = document.querySelector('input[name="tags"]');
+
+        productNameInput.addEventListener('input', validateProductName);
+        descriptionInput.addEventListener('input', validateDescription);
+        specInputs.forEach(input => input.addEventListener('input', validateSpecifications));
+        tagsInput.addEventListener('input', validateTags);
+    });
+</script>
+
+<script>
+
+//     var cropper;
+
+// document.getElementById('imageToCrop').addEventListener('change', function (event) {
+//     console.log('Image changed');
+//     var input = event.target;
+//     var reader = new FileReader();
+
+//     reader.onload = function () {
+//         var img = document.getElementById('croppedImage');
+//         img.src = reader.result;
+
+//         // Reinitialize cropper
+//         cropper = new Cropper(img, {
+//             aspectRatio: 1,
+//             viewMode: 2,
+//             crop: function (event) {
+//                 var canvas = cropper.getCroppedCanvas();
+//                 canvas.toBlob(function (blob) {
+//                     var url = URL.createObjectURL(blob);
+//                     console.log('Cropped Image URL:', url);
+//                     document.getElementById('croppedImageData').value = url;
+//                 });
+//             }
+//         });
+//     };
+
+//     // Read the selected file as a Data URL
+//     console.log( "cropped imgd"+reader.readAsDataURL(input.files[0]))
+//     reader.readAsDataURL(input.files[0]);
+// });
+
+// function change(event, no) {
+//     console.log("ok da");
+//     var fileInput = event.target;
+//     var allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
+
+//     if (!allowedExtensions.exec(fileInput.value)) {
+//         alert('!Please upload only image files ( jpg, jpeg , png ).');
+//         fileInput.value = '';
+//         return false;
+//     }
+
+//     var previewId = `imagePreview${no}`;
+//     document.getElementById(previewId).src = URL.createObjectURL(fileInput.files[0]);
+
+//     return true;
+// }
+
+</script>
+<script>
+    const priceInput = document.getElementById('price');
+    const discountInput = document.getElementById('discountAmount');
+    const stockInput = document.getElementById("stockquantity");
+
+    priceInput.addEventListener('input', validatePrice);
+    discountInput.addEventListener('input', validatePrice);
+    stockInput.addEventListener('input', validateStock);
+
+    function validatePrice() {
+        const price = parseFloat(priceInput.value);
+        const discount = parseFloat(discountInput.value);
+
+        if (price <= discount) {
+            priceInput.setCustomValidity('Price must be greater than discount amount.');
+        } else if (price < 0) {
+            priceInput.setCustomValidity('Price must be more than zero');
+        } else if (discount < 0) {
+            discountInput.setCustomValidity('Discount must be more than or equal to zero');
+        } else {
+            priceInput.setCustomValidity('');
+            discountInput.setCustomValidity('')
+        }
+    }
+
+    function validateStock() {
+        const stock = parseFloat(stockInput.value);
+        if (stock < 0) {
+            stockInput.setCustomValidity('Stock must be more than or equal to zero');
+        } else {
+            stockInput.setCustomValidity('');
+        }
+    }
+</script>
+<%-include("../layout/adminFooter.ejs")-%>
