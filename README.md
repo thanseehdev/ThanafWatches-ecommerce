@@ -28,6 +28,10 @@ Includes user and admin functionalities such as product browsing, cart, checkout
 
 ---
 
+## 💳 Payment Gateway
+
+This project uses **Razorpay** for payment processing during checkout.
+
 ## 🧰 Tech Stack
 
 - **Backend:** Node.js, Express
