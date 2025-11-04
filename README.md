@@ -39,7 +39,7 @@ This project uses **Razorpay** for payment processing during checkout.
 - **Database:** MongoDB (with Mongoose)
 - **Authentication:** Express Sessions
 - **Templating Engine:** EJS
-- **Styling:** CSS (or Bootstrap if used)
+- **Styling:CSS
 
 ---
 
